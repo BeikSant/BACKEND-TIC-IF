@@ -19,7 +19,7 @@ import morgan from 'morgan';
 import conclusionRouter from './routes/conclusionesRecomendacion.route.js';
 
 const app = express();
-var whitelist = ['http://localhost:9000']
+var whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3]
 
 //app.use(cors())
 
