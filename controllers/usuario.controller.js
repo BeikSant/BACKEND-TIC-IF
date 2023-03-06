@@ -11,15 +11,16 @@ const usuarioController = {}
 usuarioController.login = async (req, res) => {
     const { username, password } = req.body
     try {
-        const user = await usuarioModel.findOne({ username: username })
-            .populate(['rol', 'docente'])
+        const user = await usuarioModel.findOne({ username: username }).populate('rol')
         if (!user) return res.status(404).json({ message: 'Credenciales incorrectas' })
+        const docente = await docenteModel.findOne({ usuario: user._id })
+        console.log(docente)
         const comparePassword = await user.comparePassword(password)
         if (!comparePassword) return res.status(404).json({ message: 'Credenciales incorrectas' })
         if (!user.estado) return res.status(404).json({ message: 'La cuenta se encuentra inactiva' })
         const dataUser = {
             user: user.id,
-            docente: user.docente.id,
+            docente: docente.id,
             rol: user.rol.nombre
         }
         const { token, expiresIn } = generateToken(dataUser)
@@ -75,7 +76,7 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
         user.tokenRecuperacion = token
         user.tokenExpire = fechaExpire
         const enviarEmail = await mail.enviarMail(user.username, enlace + '/' + user.tokenRecuperacion)
-        if (enviarEmail == 'error')  res.status(404).json({ message: "Error al enviar el correo" })
+        if (enviarEmail == 'error') res.status(404).json({ message: "Error al enviar el correo" })
         await user.save()
         return res.status(201).json({ message: "Email enviado a su correo" })
     } catch (error) {
@@ -106,15 +107,15 @@ usuarioController.recuperarPassword = async (req, res) => {
     const token = req.params.token
     const newpassword = req.body.password
     try {
-        const user = await usuarioModel.findOne({tokenRecuperacion: token})
+        const user = await usuarioModel.findOne({ tokenRecuperacion: token })
         console.log(user)
-        if (!user) return res.status(404).json({message: "Not Found"})
+        if (!user) return res.status(404).json({ message: "Not Found" })
         user.tokenRecuperacion = null
         user.tokenExpire = null
         user.password = newpassword
         await user.save()
         console.log(user)
-        res.status(200).json({message: "Contraseña actualizada con éxito"})
+        res.status(200).json({ message: "Contraseña actualizada con éxito" })
     } catch (error) {
         console.log(err)
         return res.status(500).json({ message: "Error interno del servidor" })
@@ -126,7 +127,7 @@ usuarioController.cambiarEstado = async (req, res) => {
     try {
         const docente = await docenteModel.findOne({ cedula: cedula })
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
-        const usuario = await usuarioModel.findOne({ docente: docente.id })
+        const usuario = await usuarioModel.findById(docente.usuario)
         if (!usuario) return res.status(404).json({ message: "No se encontró la cuenta" })
         const estado = usuario.estado
         await usuario.updateOne({ estado: !estado })
@@ -136,6 +137,19 @@ usuarioController.cambiarEstado = async (req, res) => {
         console.error
         return res.status(500).json({ message: "Error interno del servidor" })
     }
+}
+
+usuarioController.cambiarRol = async (req, res) => {
+    const iddocente = req.params.docente
+    const newrol = req.body.newrol
+    const docente = await docenteModel.findById(iddocente)
+    if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
+    const usuario = await usuarioModel.findById(docente.usuario)
+    if (!usuario) return res.status(404).json({ message: "No se encontró la cuenta" })
+    const rol = await rolModel.findOne({nombre: newrol})
+    usuario.rol = rol._id
+    await usuario.save()
+    return res.status(200).json({message: 'Se ha cambiado el rol del docente con éxito'})
 }
 
 usuarioController.refreshToken = (req, res) => {

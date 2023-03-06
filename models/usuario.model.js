@@ -8,7 +8,6 @@ const usuarioSchema = new Schema({
     rol: {type: Schema.Types.ObjectId, ref: 'rol'},
     tokenRecuperacion: {type: String, required: false},
     tokenExpire: {type: Date, required: false},
-    docente: {type: Schema.Types.ObjectId, ref: 'docente'}
 },
     {
         timestamps: {

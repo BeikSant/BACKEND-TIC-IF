@@ -16,7 +16,9 @@ export default {
             from: 'santorumbeiker069@gmail.com',
             to: email,
             subject: 'Recuperación de la cuenta',
-            html: `<h6>Ingrese al siguiente enlace para recuperar su cuenta: <b><a href="${ruta}" target="_blank">¡Click Aquí!</a></b></h6>`
+            html: `<h3>Sistema de Gestión del Informe Final de Cumplimiento del Trabajo Académico</h3>
+            <p>El siguiente enlace tiene una duración de 1 hora para recuperar su cuenta, caso contrario debe generar un nuevo enlace.</p>
+            <p style="">Ingrese al siguiente enlace para recuperar su cuenta: <b><a href="${ruta}" target="_blank">¡Click Aquí!</a></b></p>`
         }
         try {
             const transport = nodemailer.createTransport(config)

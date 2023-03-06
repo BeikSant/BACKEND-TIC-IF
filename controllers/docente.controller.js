@@ -26,29 +26,57 @@ docenteController.obtener = async (req, res) => {
 }
 
 docenteController.guardar = async (req, res) => {
-    const docente = req.body;
+    const iddirector = req.user.docente
+    let docente = req.body;
+
+    //Obtiendo la carrera del director
+    const director = await docenteModel.findById(iddirector)
+
+    //Asignando la carrera del director al docente
+    docente.carrera = director.carrera
     const doc = await docenteModel.create(docente);
     if (!doc) return res.status(404).json({ message: 'Error al crear al docente' })
-    const rol = await rolModel.findOne({ nombre: req.body.rol });
-    if (!rol) return res.status(404).json({ message: 'No se pudo encontrar el rol' })
-    console.log(doc)
+    const rol = await rolModel.findOne({ nombre: 'docente' });
+    if (!rol) {
+        await doc.delete()
+        return res.status(404).json({ message: 'No se pudo encontrar el rol' })
+    }
     const usuario = await usuarioModel.create({
         username: doc.correo,
         password: doc.cedula,
-        docente: doc.id,
-        rol: rol.id,
+        rol: rol._id,
     })
+    if (!usuario) {
+        await doc.delete()
+        return res.status(404).json({ message: 'Ocurrió un error al crear al docente' })
+    }
+    doc.usuario = usuario._id
+    await doc.save()
     return res.status(200).json({ message: 'Docente creado con éxito', docente: docente, usuario: usuario })
 }
 
 docenteController.obtenerTodos = async (req, res) => {
-    const user = await usuarioModel.find().populate({
-        path: 'docente',
+    const iddocente = req.user.docente
+    const rol = req.user.rol
+    const docente = await docenteModel.findById(iddocente)
+    let filter = {}
+    if (rol == 'director') filter = {carrera: docente.carrera}
+    let docentes = await docenteModel.find(filter).populate(['carrera', {
+        path: 'usuario',
         populate: {
-            path: 'carrera',
+            path: 'rol',
         }
-    })
-    return res.status(200).json(user)
+    }]).lean()
+    for (let i = 0; i < docentes.length; i++) {
+        console.log(docentes[i].cedula, docente.cedula)
+        if (docentes[i].cedula == docente.cedula) {
+            console.log("IsIgual")
+            docentes[i].isActual = true
+            i = docentes.length + 1
+        }
+    }
+    console.log(docentes)
+    return res.status(200).json(docentes)
 }
 
 docenteController.eliminar = async (req, res) => {
@@ -68,8 +96,8 @@ docenteController.editar = async (req, res) => {
         const docenteFind = await docenteModel.findById(idDocente)
         if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente" })
         await docenteFind.updateOne(docente)
-        const user = await await usuarioModel.findOne({docente: docenteFind.id})
-        if (!user) return res.status(404).json({ message: "No se puedo modificar la cuenta del docente"})
+        const user = await await usuarioModel.findById(docenteFind.usuario)
+        if (!user) return res.status(404).json({ message: "No se puedo modificar la cuenta del docente" })
         user.username = docente.correo
         await user.save()
         return res.status(200).json({ message: 'Se actualizó la información del docente' })

@@ -10,6 +10,7 @@ usuarioRoute.get('/logout', usuarioController.logout)
 usuarioRoute.put('/changepassword', requireToken ,usuarioController.updatePassword)
 usuarioRoute.post('/tokenrecuperacion/:email', usuarioController.generarTokenRecuperacion)
 usuarioRoute.get('/tokenverify/:token', usuarioController.verifyToken)
+usuarioRoute.post('/rol/:docente', requireToken, isDirector, usuarioController.cambiarRol)
 usuarioRoute.post('/recuperarpassword/:token', usuarioController.recuperarPassword)
 usuarioRoute.patch('/estado/:docente', requireToken, isDirector,usuarioController.cambiarEstado)
 
