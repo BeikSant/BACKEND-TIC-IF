@@ -17,9 +17,12 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import conclusionRouter from './routes/conclusionesRecomendacion.route.js';
+import init from './utils/init.js';
 
 const app = express();
-var whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3]
+var whitelist = [process.env.ORIGIN_1]
+
+await init.initData()
 
 //app.use(cors())
 

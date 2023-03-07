@@ -1,0 +1,64 @@
+import docenteModel from "../models/docente.model.js"
+import rolModel from "../models/rol.model.js"
+import facultadModel from "../models/facultad.model.js"
+import usuarioModel from "../models/usuario.model"
+
+export default {
+    async initData() {
+
+        const usuarios = await usuarioModel.find()
+        if (!usuarios) return console.log("Ocurrió un error al iniciar el servidor con datos predeterminados")
+        if (usuarios.length != 0) return console.log("Ya existen datos registrados en el servirdor")
+        
+        const dataFacultad = {
+            nombre: "Facultad de la Energía, las Industrias y los Recursos Naturales no Renovables",
+            siglas: "FEIRNNR"
+        }
+
+        const facultad = await dataFacultad.create(dataFacultad)
+
+        const dataCarrera = {
+            nombre: 'Ingeniería en Computación',
+            siglas: 'IC',
+            facultad: facultad._id
+        }
+
+        const carrera = await dataCarrera.create(dataCarrera)
+
+        const dataRol1 = {
+            nombre: 'docente',
+            descripcion: "Es el usuario normal del sistema"
+        }
+        const dataRol2 = {
+            nombre: 'director',
+            descripcion: "Es el administrador del sistema"
+        }
+
+        const rol = await rolModel.create(dataRol1)
+        const rol2 = await rolModel.create(dataRol2)
+
+        const dataUsuario = {
+            username: 'beiker.santorum@unl.edu.ec',
+            password: '1950031375',
+            rol: rol2._id
+        }
+
+        const usuario = await usuarioModel.create(dataUsuario)
+
+       
+        const newDataDocente = {
+            primerNombre: 'Beiker',
+            segundoNombre: 'Antonio',
+            primerApellido: 'Santorum',
+            segundoApellido: 'Sasaguay',
+            cedula: '1950031375',
+            correo: 'beiker.santorum@unl.edu.ec',
+            dedicacion: 'Tiempo Completo',
+            carrera: carrera._id,
+            usuario: usuario._id
+        }
+
+        await docenteModel.create(newDataDocente)
+        return console.log("Datos por defecto iniciados con normalidad")
+    }
+}
