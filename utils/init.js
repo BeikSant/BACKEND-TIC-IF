@@ -1,11 +1,12 @@
 import docenteModel from "../models/docente.model.js"
 import rolModel from "../models/rol.model.js"
 import facultadModel from "../models/facultad.model.js"
-import usuarioModel from "../models/usuario.model"
+import usuarioModel from "../models/usuario.model.js"
+import carreraModel from "../models/carrera.model.js"
 
 export default {
     async initData() {
-
+        console.log("Verificando inicializacion de datos")
         const usuarios = await usuarioModel.find()
         if (!usuarios) return console.log("Ocurrió un error al iniciar el servidor con datos predeterminados")
         if (usuarios.length != 0) return console.log("Ya existen datos registrados en el servirdor")
@@ -15,7 +16,7 @@ export default {
             siglas: "FEIRNNR"
         }
 
-        const facultad = await dataFacultad.create(dataFacultad)
+        const facultad = await facultadModel.create(dataFacultad)
 
         const dataCarrera = {
             nombre: 'Ingeniería en Computación',
@@ -23,7 +24,7 @@ export default {
             facultad: facultad._id
         }
 
-        const carrera = await dataCarrera.create(dataCarrera)
+        const carrera = await carreraModel.create(dataCarrera)
 
         const dataRol1 = {
             nombre: 'docente',
