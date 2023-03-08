@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import formatoModel from "../models/formato.model.js"
 import informeModel from "../models/informe.model.js"
 import periodoAcademicoModel from "../models/periodoAcademico.model.js"
@@ -19,8 +20,8 @@ formatoController.obtenerUno = async(req, res) => {
 
 formatoController.crear = async (req, res) => {
     if (!req.body.formato) return res.status(404).json({ message: "No existen un formato para registrar" })
-    const formatoActual = await formatoModel.findByIdAndUpdate(id, { estado: false })
-    if (formatoActual.estado == true) return res.status(404).json({ message: "Ocurrio un error al cambiar estado del formato" })
+    const formatoActual = await formatoModel.findOne({ estado: true })
+    if (formatoActual != null) await formatoActual.updateOne({ estado: false }) 
     const formatoNuevo = await formatoModel.create(req.body.formato)
     if (!formatoNuevo) return res.status(404).json({ message: "Ocurrio un error al crear el formato" })
     return res.status(200).json({ message: 'El formato del informe final se ha creado con exito' })
@@ -45,15 +46,15 @@ formatoController.obtenerTodos = async (req, res) => {
 
 formatoController.actualizar = async (req, res) => {
     if (!req.body.formato) return res.status(404).json({ message: "No existen un formato para registrar" })
-    const formato = await formatoModel.findByIdAndUpdate(req.params.id, req.body.formato)
-    if (!formato) return res.status(404).json({ message: "Ocurrio un error al actualizar el formato" })
-    return res.status(200).json({ message: 'El formato del informe final se ha actualizado con exito' })
+    const formato = await formatoModel.findById(req.params.id)
+    if (!formato) return res.status(404).json({ message: "No se encontró el formato" })
+    await formato.updateOne(req.body.formato)
+    return res.status(200).json({ message: 'El formato se ha actualizó con exito' })
 }
 
 formatoController.cambiarEstado = async (req, res) => {
     const formatoActual = await formatoModel.findOne({ estado: true })
-    if (!formatoActual) return res.status(404).json({ message: "Ocurrio un error al cambiar el estado actual del formato" })
-    await formatoActual.update({ estado: false })
+    if (formatoActual != null) await formatoActual.updateOne({ estado: false }) 
     const formatoNuevo = await formatoModel.findById(req.params.id)
     if (!formatoNuevo) return res.status(404).json({ message: 'No se pudo encontrar el formato' })
     await formatoNuevo.update({ estado: true })
@@ -71,4 +72,20 @@ formatoController.obtenerActivo = async (req, res) => {
     }
 }
 
+formatoController.eliminar = async (req, res) => {
+    const idformato = req.params.id
+    if (!mongoose.isValidObjectId(idformato)) return res.status(404).json({message: 'Formato no encontrado'})
+    const formato = await formatoModel.findById(idformato)
+    const informes = await informeModel.find({formato: formato._id}).populate('periodoAcademico').sort({created_at: 1}).lean()
+    if (informes.length && informes.length > 0) {
+        for (let j = 0; j < informes.length; j++) {
+            if (!informes[j].periodoAcademico.estado){
+                return res.status(404).json({message: 'Este formato no se puede eliminar'})
+            }
+        }
+    }
+    await formato.delete()
+    return res.status(200).json({message: 'Formato eliminado con éxito'})
+}
+ 
 export default formatoController

@@ -13,4 +13,6 @@ formatoRouter.patch('/estado/:id', requireToken, isDirector, formatoController.c
 formatoRouter.get('/active', requireToken, formatoController.obtenerActivo)
 formatoRouter.get('/:formato', requireToken, formatoController.obtenerUno)
 
+formatoRouter.delete('/:id', requireToken, isDirector, formatoController.eliminar)
+
 export default formatoRouter
