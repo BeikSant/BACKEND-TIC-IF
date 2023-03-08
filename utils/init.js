@@ -19,7 +19,6 @@ export default {
             }
 
             const facultad = await facultadModel.create(dataFacultad)
-
             const dataCarrera = {
                 nombre: 'Ingeniería en Computación',
                 siglas: 'IC',
@@ -86,7 +85,7 @@ export default {
 
             return console.log("Datos por defecto iniciados con normalidad")
         } catch (error) {
-            console.log("Ocurrió un error al inicializar los datos predeterminados en MongoDB")
+            console.log("Ocurrió un error al inicializar los datos predeterminados en MongoDB:", error)
         }
     }
 }

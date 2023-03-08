@@ -14,7 +14,6 @@ usuarioController.login = async (req, res) => {
         const user = await usuarioModel.findOne({ username: username }).populate('rol')
         if (!user) return res.status(404).json({ message: 'Credenciales incorrectas' })
         const docente = await docenteModel.findOne({ usuario: user._id })
-        console.log(docente)
         const comparePassword = await user.comparePassword(password)
         if (!comparePassword) return res.status(404).json({ message: 'Credenciales incorrectas' })
         if (!user.estado) return res.status(404).json({ message: 'La cuenta se encuentra inactiva' })
@@ -160,7 +159,6 @@ usuarioController.refreshToken = (req, res) => {
             rol: req.user.rol,
         }
         const { token, expiresIn } = generateToken(dataUser, res)
-        generateRefreshToken(dataUser, res)
         return res.json({ token, expiresIn, rol: dataUser.rol });
     } catch (error) {
         console.log(error);
