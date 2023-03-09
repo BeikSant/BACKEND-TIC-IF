@@ -90,7 +90,7 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
         await user.save()
         return res.status(201).json({ message: "Email enviado a su correo" })
     } catch (error) {
-        console.log(err)
+        console.log(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }

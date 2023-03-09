@@ -7,8 +7,8 @@ export default {
             host: 'smtp.gmail.com',
             port: 587,
             auth: {
-                user: USER_MAIL,
-                pass: PASS_MAIL
+                user: process.env.USER_MAIL,
+                pass: process.env.PASS_MAIL
             }
         }
     
