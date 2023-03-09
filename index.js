@@ -20,7 +20,7 @@ import conclusionRouter from './routes/conclusionesRecomendacion.route.js';
 import init from './utils/init.js';
 
 const app = express();
-var whitelist = [process.env.ORIGIN_1]
+var whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2]
 
 await init.initData()
 
