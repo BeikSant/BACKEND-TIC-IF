@@ -3,7 +3,7 @@ import docenteModel from '../models/docente.model.js'
 import rolModel from '../models/rol.model.js'
 import { nanoid } from 'nanoid'
 import usuarioModel from '../models/usuario.model.js'
-import { generateRefreshToken, generateToken } from '../utils/tokens.js'
+import { generateToken } from '../utils/tokens.js'
 import mail from '../utils/mail.js'
 
 const usuarioController = {}
@@ -17,18 +17,29 @@ usuarioController.login = async (req, res) => {
         const comparePassword = await user.comparePassword(password)
         if (!comparePassword) return res.status(404).json({ message: 'Credenciales incorrectas' })
         if (!user.estado) return res.status(404).json({ message: 'La cuenta se encuentra inactiva' })
+       
+        const fechaExpire = new Date();
+        //fechaExpire.setSeconds(fechaExpire.getSeconds() + 10);
+        fechaExpire.setHours(fechaExpire.getHours() + 12);
+
         const dataUser = {
             user: user.id,
             docente: docente.id,
-            rol: user.rol.nombre
+            rol: user.rol.nombre,
+            expireToken: fechaExpire
         }
-        const { token, expiresIn } = generateToken(dataUser)
-        generateRefreshToken(dataUser, res)
-        return res.status(200).json({ token, expiresIn, rol: dataUser.rol })
+        const { token } = generateToken(dataUser)
+        return res.status(200).json({ token })
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
+}
+
+
+usuarioController.verificarsesion = async (req, res) => {
+    const rol = req.user.rol
+    return res.status(200).json({message: "OK", rol: rol})
 }
 
 usuarioController.updatePassword = async (req, res) => {
@@ -150,25 +161,5 @@ usuarioController.cambiarRol = async (req, res) => {
     await usuario.save()
     return res.status(200).json({message: 'Se ha cambiado el rol del docente con éxito'})
 }
-
-usuarioController.refreshToken = (req, res) => {
-    try {
-        const dataUser = {
-            user: req.user.user,
-            docente: req.user.docente,
-            rol: req.user.rol,
-        }
-        const { token, expiresIn } = generateToken(dataUser, res)
-        return res.json({ token, expiresIn, rol: dataUser.rol });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: "error de server" });
-    }
-};
-
-usuarioController.logout = (req, res) => {
-    res.clearCookie("user_token_if");
-    return res.status(200).json({ ok: true });
-};
 
 export default usuarioController;

@@ -1,12 +1,11 @@
 import express from 'express';
 import usuarioController from '../controllers/usuario.controller.js'
-import { isDirector, requireRefreshToken, requireToken } from '../middleware/validateSesion.js';
+import { isDirector, requireToken } from '../middleware/validateSesion.js';
 
 const usuarioRoute = express.Router();
 
 usuarioRoute.post('/login', usuarioController.login)
-usuarioRoute.get('/refresh',requireRefreshToken ,usuarioController.refreshToken)
-usuarioRoute.get('/logout', usuarioController.logout)
+usuarioRoute.get('/verifysesion', requireToken, usuarioController.verificarsesion)
 usuarioRoute.put('/changepassword', requireToken ,usuarioController.updatePassword)
 usuarioRoute.post('/tokenrecuperacion/:email', usuarioController.generarTokenRecuperacion)
 usuarioRoute.get('/tokenverify/:token', usuarioController.verifyToken)
