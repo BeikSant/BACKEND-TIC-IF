@@ -6,6 +6,7 @@ const actividadDistributivoController = {}
 //obtiene todas las actividades del distributivo activas con su respectiva funcion sustantiva
 actividadDistributivoController.obtenerTodos = async (req, res) => {
     const funcionesSustantivas = await funcionSustantivaModel.find()
+    if (funcionesSustantivas == []) return res.status(404).json({ message: "No existen actividades del distributivo registradas" })
     let result = { funcionesSustantivas: [] }
     for (let i = 0; i < funcionesSustantivas.length; i++) {
         const actividades = await actividadDistributivoModel.find({ estado: true, funcionSustantiva: funcionesSustantivas[i].id })

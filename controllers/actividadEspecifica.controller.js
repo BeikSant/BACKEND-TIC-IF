@@ -9,7 +9,8 @@ import observacionModel from "../models/observacion.model.js"
 const actividadEspecificaController = {}
 
 actividadEspecificaController.obtenerPorInforme = async (req, res) => {
-    const idInforme = req.params.informe
+    try {
+        const idInforme = req.params.informe
     if (!mongoose.isValidObjectId(idInforme)) return res.status(404).json({ message: "No existe el informe final" })
     const informe = await informeModel.findById(idInforme)
     if (!informe) return res.status(404).json({ message: "No existe el informe final" })
@@ -28,6 +29,10 @@ actividadEspecificaController.obtenerPorInforme = async (req, res) => {
         message: actividades < 1 ? "No existen actividades específicas del informe final" : "Se pudo obtener las actividades del informe final",
         actividadesEspecificas: actividades
     })
+    } catch (error) {
+        
+    }
+    
 }
 
 actividadEspecificaController.guardar = async (req, res) => {
