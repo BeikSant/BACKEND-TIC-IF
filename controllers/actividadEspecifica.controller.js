@@ -11,28 +11,28 @@ const actividadEspecificaController = {}
 actividadEspecificaController.obtenerPorInforme = async (req, res) => {
     try {
         const idInforme = req.params.informe
-    if (!mongoose.isValidObjectId(idInforme)) return res.status(404).json({ message: "No existe el informe final" })
-    const informe = await informeModel.findById(idInforme)
-    if (!informe) return res.status(404).json({ message: "No existe el informe final" })
-    const actividades = await actividadEspecificaModel.find({ informeFinal: informe.id }).populate({
-        path: 'actividadDistributivo',
-        populate: {
-            path: 'funcionSustantiva',
+        if (!mongoose.isValidObjectId(idInforme)) return res.status(404).json({ message: "No existe el informe final" })
+        const informe = await informeModel.findById(idInforme)
+        if (!informe) return res.status(404).json({ message: "No existe el informe final" })
+        const actividades = await actividadEspecificaModel.find({ informeFinal: informe.id }).populate({
+            path: 'actividadDistributivo',
+            populate: {
+                path: 'funcionSustantiva',
+            }
+        }).sort({ nombre: 1 }).lean()
+        for (let i = 0; i < actividades.length; i++) {
+            actividades[i].observacion = await observacionModel.find({ actividadEspecifica: actividades[i]._id }).count();
+            actividades[i].evidencia = await evidenciaModel.find({ actividadEspecifica: actividades[i]._id }).count();
+            actividades[i].actividadDesarrollada = await actividadDesarrolladaModel.find({ actividadEspecifica: actividades[i]._id }).count();
         }
-    }).sort({nombre: 1}).lean()
-    for (let i = 0; i < actividades.length; i++) {
-        actividades[i].observacion = await observacionModel.find({ actividadEspecifica: actividades[i]._id }).count();
-        actividades[i].evidencia = await evidenciaModel.find({ actividadEspecifica: actividades[i]._id }).count();
-        actividades[i].actividadDesarrollada = await actividadDesarrolladaModel.find({ actividadEspecifica: actividades[i]._id }).count();
-    }
-    return res.status(200).json({
-        message: actividades < 1 ? "No existen actividades específicas del informe final" : "Se pudo obtener las actividades del informe final",
-        actividadesEspecificas: actividades
-    })
+        return res.status(200).json({
+            message: actividades < 1 ? "No existen actividades específicas del informe final" : "Se pudo obtener las actividades del informe final",
+            actividadesEspecificas: actividades
+        })
     } catch (error) {
-        
+        console.log(error)
     }
-    
+
 }
 
 actividadEspecificaController.guardar = async (req, res) => {

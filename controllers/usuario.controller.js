@@ -68,7 +68,6 @@ usuarioController.updatePassword = async (req, res) => {
 usuarioController.generarTokenRecuperacion = async (req, res) => {
     const email = req.params.email
     let enlace = req.body.enlace
-    console.log(enlace)
     try {
         const user = await usuarioModel.findOne({ username: email })
         if (!user) return res.status(404).json({ message: "El correo no pertence a ninguna cuenta registrada" })
@@ -118,13 +117,11 @@ usuarioController.recuperarPassword = async (req, res) => {
     const newpassword = req.body.password
     try {
         const user = await usuarioModel.findOne({ tokenRecuperacion: token })
-        console.log(user)
         if (!user) return res.status(404).json({ message: "Not Found" })
         user.tokenRecuperacion = null
         user.tokenExpire = null
         user.password = newpassword
         await user.save()
-        console.log(user)
         res.status(200).json({ message: "Contraseña actualizada con éxito" })
     } catch (error) {
         console.log(err)

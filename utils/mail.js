@@ -2,7 +2,6 @@ import nodemailer from 'nodemailer'
 
 export default {
     async enviarMail (email, ruta){
-        console.log(ruta)
         const config = {
             host: 'smtp.gmail.com',
             port: 587,
