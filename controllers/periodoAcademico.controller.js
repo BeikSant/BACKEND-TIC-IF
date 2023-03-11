@@ -18,7 +18,7 @@ periodoAcademicoController.obtenerTodos = async (req, res) => {
     if (!periodos) return res.status(404).json({ message: "Ocurrió un error al obtener todos los periodos académicos" })
     for (let i = 0; i < periodos.length; i++) {
         periodos[i].editable = true
-        const informes = await informeModel.find({periodoAcademico: periodos[i]._id})
+        const informes = await informeModel.find({ periodoAcademico: periodos[i]._id })
         if (informes.length && informes.length > 0) periodos[i].editable = false
     }
     return res.status(200).json({ message: "Se obtuvo todos los periodos académicos", periodos: periodos })
@@ -34,6 +34,8 @@ periodoAcademicoController.eliminarPeriodo = async (req, res) => {
     const id = req.params.id
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No existe el periodo académico" })
     const periodo = await periodoAcademicoModel.findById(id)
+    const informes = await informeModel.find({ periodoAcademico: periodo._id })
+    if (informes.length && informes.length > 0) return res.status(404).json({ message: "No se puede eliminar el periodo académico" })
     if (!periodo) return res.status(404).json({ message: "No existe el periodo académico" })
     await periodo.delete()
     return res.status(200).json({ message: "Periodo eliminado con éxito" })

@@ -28,6 +28,7 @@ await init.initData()
 
 app.use(cors({
     origin: function (origin, callback) {
+        if (process.env.MODO == 'desarrollo') return  callback(null, true)
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {

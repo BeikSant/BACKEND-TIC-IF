@@ -45,9 +45,18 @@ formatoController.obtenerTodos = async (req, res) => {
 }
 
 formatoController.actualizar = async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) return res.status(404).json({ message: "No se encontró el formato" })
     if (!req.body.formato) return res.status(404).json({ message: "No existen un formato para registrar" })
     const formato = await formatoModel.findById(req.params.id)
     if (!formato) return res.status(404).json({ message: "No se encontró el formato" })
+    const informes = await informeModel.find({formato: formato._id}).populate('periodoAcademico').sort({created_at: 1}).lean()
+    if (informes.length && informes.length > 0) {
+        for (let j = 0; j < informes.length; j++) {
+            if (!informes[j].periodoAcademico.estado){
+                return res.status(404).json({message: 'Este formato no se puede editar'})
+            }
+        }
+    }
     await formato.updateOne(req.body.formato)
     return res.status(200).json({ message: 'El formato se ha actualizó con exito' })
 }
@@ -77,6 +86,7 @@ formatoController.eliminar = async (req, res) => {
     if (!mongoose.isValidObjectId(idformato)) return res.status(404).json({message: 'Formato no encontrado'})
     const formato = await formatoModel.findById(idformato)
     const informes = await informeModel.find({formato: formato._id}).populate('periodoAcademico').sort({created_at: 1}).lean()
+    if (formato.estado) return res.status(404).json({message: 'Este formato no se puede eliminar'})
     if (informes.length && informes.length > 0) {
         for (let j = 0; j < informes.length; j++) {
             if (!informes[j].periodoAcademico.estado){
