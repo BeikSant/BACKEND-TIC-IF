@@ -36,7 +36,7 @@ export default {
                 descripcion: "Es el administrador del sistema"
             }
 
-            const rol = await rolModel.create(dataRol1)
+            await rolModel.create(dataRol1)
             const rol2 = await rolModel.create(dataRol2)
 
             const dataUsuario = {
