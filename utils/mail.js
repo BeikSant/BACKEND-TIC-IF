@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 export default {
-    async enviarMail (email, ruta){
+    async enviarMail(email, ruta) {
         const config = {
             host: 'smtp.gmail.com',
             port: 587,
@@ -10,14 +10,35 @@ export default {
                 pass: process.env.PASS_MAIL
             }
         }
-    
+
         const mensaje = {
             from: 'santorumbeiker069@gmail.com',
             to: email,
             subject: 'Recuperación de la cuenta',
-            html: `<h3>Sistema de Gestión del Informe Final de Cumplimiento del Trabajo Académico</h3>
-            <p>El siguiente enlace tiene una duración de 1 hora para recuperar su cuenta, caso contrario debe generar un nuevo enlace.</p>
-            <p style="">Ingrese al siguiente enlace para recuperar su cuenta: <b><a href="${ruta}" target="_blank">¡Click Aquí!</a></b></p>`
+            html: ` 
+            <div class="card" style=" font-family: Arial, Helvetica, sans-serif; padding: 0px;
+            margin: 20px;
+            background-color: rgba(0, 0, 0, 0.05);">
+                <div class="card-title" 
+                style=" background-color: #000E64;
+                padding: 5px;
+                color: white;
+                text-align: center;">
+                    <h5>SISTEMA DE GESTIÓN DEL INFORME FINAL DEL CUMPLIMIENTO DEL TRABAJO ACADÉMICO DE DOCENTES
+                    </h5>
+                </div>
+                <div class="card-content" 
+                style="padding-left: 20px;
+                padding-right: 20px;
+                text-align: center; 
+                color: black;
+                padding-bottom: 5px;">
+                    <p>Está intentado recuperar su cuenta. El siguiente enlace solo tiene una duración de <b>1 hora</b>, caso
+                        contrario debe generar un
+                        nuevo enlace.</p>
+                    <p> Ingrese al siguiente enlace para recuperar su cuenta: <a href="${ruta}">¡Click Aquí!</a></p>
+                </div>
+            </div>`
         }
         try {
             const transport = nodemailer.createTransport(config)

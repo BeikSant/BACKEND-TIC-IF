@@ -24,13 +24,13 @@ periodoAcademicoController.obtenerTodos = async (req, res) => {
     return res.status(200).json({ message: "Se obtuvo todos los periodos académicos", periodos: periodos })
 }
 
-periodoAcademicoController.obtenerPeriodoActivo = async (req, res) => {
+periodoAcademicoController.obtenerActivo = async (req, res) => {
     const periodo = await periodoAcademicoModel.findOne({ estado: true })
     if (!periodo) return res.status(404).json({ message: "No existe un periodo académico activo" })
     return res.status(200).json({ message: "Se obtuvo el periodo académico activo", periodo: periodo })
 }
 
-periodoAcademicoController.eliminarPeriodo = async (req, res) => {
+periodoAcademicoController.eliminar = async (req, res) => {
     const id = req.params.id
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No existe el periodo académico" })
     const periodo = await periodoAcademicoModel.findById(id)

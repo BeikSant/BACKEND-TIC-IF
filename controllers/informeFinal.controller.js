@@ -6,7 +6,7 @@ import periodoAcademicoModel from "../models/periodoAcademico.model.js"
 
 const informeFinalController = {}
 
-informeFinalController.obtener = async (req, res) => {
+informeFinalController.obtenerPorPeriodo = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
     const nombrePeriodo = req.params.periodo
     const id = req.user.docente

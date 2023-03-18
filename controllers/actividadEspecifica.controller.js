@@ -62,7 +62,7 @@ actividadEspecificaController.eliminar = async (req, res) => {
 }
 
 //Edita la informacion de una actividad específica
-actividadEspecificaController.editar = async (req, res) => {
+actividadEspecificaController.actualizar = async (req, res) => {
     const idActividad = req.params.id
     const actividad = req.body.actividad
     if (!mongoose.isValidObjectId(idActividad)) return res.status(400).json({ message: "No se ha podido encontrar la actividad especifica" })

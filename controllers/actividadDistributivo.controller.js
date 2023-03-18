@@ -4,7 +4,7 @@ import funcionSustantivaModel from "../models/funcionSustantiva.model.js"
 const actividadDistributivoController = {}
 
 //obtiene todas las actividades del distributivo activas con su respectiva funcion sustantiva
-actividadDistributivoController.obtenerTodos = async (req, res) => {
+actividadDistributivoController.obtenerActivas = async (req, res) => {
     const funcionesSustantivas = await funcionSustantivaModel.find()
     if (funcionesSustantivas == []) return res.status(404).json({ message: "No existen actividades del distributivo registradas" })
     let result = { funcionesSustantivas: [] }

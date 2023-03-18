@@ -21,8 +21,11 @@ actividadDesarrolladaController.obtenerPorActividadEspecifica = async (req, res)
 }
 
 actividadDesarrolladaController.guardar = async (req, res) => {
-    const idEspecifica = req.body.actividadDesarrollada.actividadEspecifica
-    let actividadDesarrolladaBody = req.body.actividadDesarrollada
+    const idEspecifica = req.body.actividadDesarrollada.actividadEspecifica.toString()
+    let actividadDesarrolladaBody = {
+        nombre: req.body.actividadDesarrollada.toString(),
+        actividadEspecifica: req.body.actividadDesarrollada.actividadEspecifica.toString()
+    }
     try {
         if (!mongoose.isValidObjectId(idEspecifica)) return res.status(404).json({ message: "No se encontró la actividad específica" })
         const actividadEspecifica = await actividadEspecificaModel.findById(idEspecifica)

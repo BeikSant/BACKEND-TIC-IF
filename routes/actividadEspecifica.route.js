@@ -7,6 +7,6 @@ const actividadEspecificaRouter = express.Router();
 actividadEspecificaRouter.get('/:informe', requireToken, actividadEspecificaController.obtenerPorInforme)
 actividadEspecificaRouter.post('/:informe/:distributivo', requireToken, actividadEspecificaController.guardar)
 actividadEspecificaRouter.delete('/:especifica', requireToken, actividadEspecificaController.eliminar)
-actividadEspecificaRouter.patch('/:id', requireToken, actividadEspecificaController.editar)
+actividadEspecificaRouter.patch('/:id', requireToken, actividadEspecificaController.actualizar)
 
 export default actividadEspecificaRouter

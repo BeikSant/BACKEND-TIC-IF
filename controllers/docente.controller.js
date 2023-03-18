@@ -7,7 +7,7 @@ import rolModel from "../models/rol.model.js";
 
 const docenteController = {}
 
-docenteController.obtener = async (req, res) => {
+docenteController.obtenerUno = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
     try {
         const docente = await docenteModel.findById(req.user.docente)
@@ -30,7 +30,7 @@ docenteController.obtener = async (req, res) => {
     }
 }
 
-docenteController.guardar = async (req, res) => {
+docenteController.crear = async (req, res) => {
     const iddirector = req.user.docente
     let docente = req.body;
 
