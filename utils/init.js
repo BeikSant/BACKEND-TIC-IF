@@ -41,7 +41,7 @@ export default {
 
             const dataUsuario = {
                 username: 'beiker.santorum@unl.edu.ec',
-                password: '1950031375',
+                password: process.env.PASSWORD_INIT,
                 rol: rol2._id
             }
 

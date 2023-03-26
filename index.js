@@ -19,6 +19,7 @@ import conclusionRouter from './routes/conclusionesRecomendacion.route.js';
 import init from './utils/init.js';
 
 const app = express();//inicializa el proyecto con express.js
+app.disable("x-powered-by");
 //almacena todos los origenes que tendran acceso al API
 const whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3 ? process.env.ORIGIN_3 : '' ]
 
