@@ -8,6 +8,7 @@ import observacionModel from "../models/observacion.model.js"
 
 const actividadEspecificaController = {}
 
+//Obtiene todas las actividades especificas de un informe final
 actividadEspecificaController.obtenerPorInforme = async (req, res) => {
     try {
         const idInforme = req.params.informe
@@ -20,10 +21,10 @@ actividadEspecificaController.obtenerPorInforme = async (req, res) => {
                 path: 'funcionSustantiva',
             }
         }).sort({ nombre: 1 }).lean()
-        for (let i = 0; i < actividades.length; i++) {
-            actividades[i].observacion = await observacionModel.find({ actividadEspecifica: actividades[i]._id }).count();
-            actividades[i].evidencia = await evidenciaModel.find({ actividadEspecifica: actividades[i]._id }).count();
-            actividades[i].actividadDesarrollada = await actividadDesarrolladaModel.find({ actividadEspecifica: actividades[i]._id }).count();
+        for (const actividad of actividades) {
+            actividad.observacion = await observacionModel.find({ actividadEspecifica: actividad._id }).count();
+            actividad.evidencia = await evidenciaModel.find({ actividadEspecifica: actividad._id }).count();
+            actividad.actividadDesarrollada = await actividadDesarrolladaModel.find({ actividadEspecifica: actividad._id }).count();
         }
         return res.status(200).json({
             message: actividades < 1 ? "No existen actividades específicas del informe final" : "Se pudo obtener las actividades del informe final",
@@ -35,18 +36,22 @@ actividadEspecificaController.obtenerPorInforme = async (req, res) => {
 
 }
 
+//Permite guardar una actividad especifica en un informe final
 actividadEspecificaController.guardar = async (req, res) => {
-    const idInforme = req.params.informe
-    const idDistributivo = req.params.distributivo
-    const actividad = req.body.actividad
+    const idInforme = req.params.informe.toString()
+    const idDistributivo = req.params.distributivo.toString()
+    const actividad = {
+        nombre: req.body.actividad.toString(),
+        horas: +req.body.horas,
+        informeFinal: idInforme,
+        actividadDistributivo: idDistributivo
+    }
     if (!mongoose.isValidObjectId(idInforme)) return res.status(404).json({ message: "No existe el informe final" })
     if (!mongoose.isValidObjectId(idDistributivo)) return res.status(404).json({ message: "No existe la actividad del distributivo" })
     const informe = await informeModel.findById(idInforme)
     if (!informe) return res.status(404).json({ message: "No existe el informe final" })
     const actividadDistributivo = await actividadDistributivoModel.findById(idDistributivo)
     if (!actividadDistributivo) return res.status(404).json({ message: "No existe la actividad del distributivo" })
-    actividad.informeFinal = informe.id
-    actividad.actividadDistributivo = actividadDistributivo.id
     const actividadEspecifica = await actividadEspecificaModel.create(actividad)
     if (!actividadEspecifica) return res.status(404).json({ message: "No se pudo crear la actividad especifica" })
     return res.json(200).status({ message: "La actividad especifica se ha creado con éxito" })

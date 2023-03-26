@@ -20,7 +20,7 @@ import init from './utils/init.js';
 
 const app = express();//inicializa el proyecto con express.js
 //almacena todos los origenes que tendran acceso al API
-var whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3 ? process.env.ORIGIN_3 : '' ]
+const whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3 ? process.env.ORIGIN_3 : '' ]
 
 await init.initData() //inicializa algunos datos, cuando no hayan nada en la base de datos
 //verifica que el origen que esta consumiendo una API se encuentre en la lista blanca

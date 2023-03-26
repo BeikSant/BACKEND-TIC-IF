@@ -1,6 +1,6 @@
 import express from 'express';
 import carreraController from '../controllers/carrera.controller.js';
-import { isDirector, requireToken } from '../middleware/validateSesion.js';
+import { requireToken } from '../middleware/validateSesion.js';
 
 const carreraRouter = express.Router();
 

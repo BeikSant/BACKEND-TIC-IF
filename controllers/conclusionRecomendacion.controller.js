@@ -4,7 +4,10 @@ import informeModel from "../models/informe.model.js"
 
 export default {
     async guardar(req, res){
-        let conclusion_recomendacion = req.body
+        let conclusion_recomendacion = {
+            nombre: req.body.nombre.toString(),
+            informe: req.body.informe.toString()
+        }
         if (!mongoose.isValidObjectId(conclusion_recomendacion.informe)) return res.status(404).json({message: 'No se encontró el informe'})
         const informe = await informeModel.findById(conclusion_recomendacion.informe)
         if (!informe) return res.status(404).json({message: 'No se encontró el informe'})

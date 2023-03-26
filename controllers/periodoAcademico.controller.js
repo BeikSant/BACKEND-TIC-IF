@@ -5,7 +5,11 @@ import periodoAcademicoModel from "../models/periodoAcademico.model.js"
 const periodoAcademicoController = {}
 
 periodoAcademicoController.crear = async (req, res) => {
-    const periodo = req.body.periodo
+    const periodo = {
+        nombre: req.body.periodo.nombre.toString(),
+        fechaInicio: new Date(req.body.periodo.fechaInicio),
+        fechaFin: new Date(req.body.periodo.fechaFin)
+    }
     const cambiarEstado = await cambiarEstadoUltimoPeriodo()
     if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el nuevo periodo académico" })
     const periodoAcademico = await periodoAcademicoModel.create(periodo)
@@ -16,10 +20,10 @@ periodoAcademicoController.crear = async (req, res) => {
 periodoAcademicoController.obtenerTodos = async (req, res) => {
     let periodos = await periodoAcademicoModel.find().sort({ created_at: -1 }).lean()
     if (!periodos) return res.status(404).json({ message: "Ocurrió un error al obtener todos los periodos académicos" })
-    for (let i = 0; i < periodos.length; i++) {
-        periodos[i].editable = true
-        const informes = await informeModel.find({ periodoAcademico: periodos[i]._id })
-        if (informes.length && informes.length > 0) periodos[i].editable = false
+    for (let periodo of periodos) {
+        periodo.editable = true
+        const informes = await informeModel.find({ periodoAcademico: periodo._id })
+        if (informes.length && informes.length > 0) periodo.editable = false
     }
     return res.status(200).json({ message: "Se obtuvo todos los periodos académicos", periodos: periodos })
 }
