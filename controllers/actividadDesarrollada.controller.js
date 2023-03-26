@@ -23,7 +23,7 @@ actividadDesarrolladaController.obtenerPorActividadEspecifica = async (req, res)
 actividadDesarrolladaController.guardar = async (req, res) => {
     const idEspecifica = req.body.actividadDesarrollada.actividadEspecifica.toString()
     let actividadDesarrolladaBody = {
-        nombre: req.body.actividadDesarrollada.toString(),
+        nombre: req.body.actividadDesarrollada.nombre.toString(),
         actividadEspecifica: req.body.actividadDesarrollada.actividadEspecifica.toString()
     }
     try {

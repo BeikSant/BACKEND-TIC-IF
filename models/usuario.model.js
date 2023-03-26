@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import bcryptsjs from "bcryptjs"
 
 const usuarioSchema = new Schema({
-    username: { type: String, required: true },
+    username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     estado: { type: Boolean, default: true},
     rol: {type: Schema.Types.ObjectId, ref: 'rol'},

@@ -14,18 +14,16 @@ import actividadDesarrolladaRouter from './routes/actividadDesarrollada.route.js
 import observacionRouter from './routes/observacion.route.js';
 import carreraRouter from './routes/carrera.route.js';
 import cors from 'cors'
-import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import conclusionRouter from './routes/conclusionesRecomendacion.route.js';
 import init from './utils/init.js';
 
-const app = express();
+const app = express();//inicializa el proyecto con express.js
+//almacena todos los origenes que tendran acceso al API
 var whitelist = [process.env.ORIGIN_1, process.env.ORIGIN_2, process.env.ORIGIN_3 ? process.env.ORIGIN_3 : '' ]
 
-await init.initData()
-
-//app.use(cors())
-
+await init.initData() //inicializa algunos datos, cuando no hayan nada en la base de datos
+//verifica que el origen que esta consumiendo una API se encuentre en la lista blanca
 app.use(cors({
     origin: function (origin, callback) {
         if (process.env.MODO == 'desarrollo') return callback(null, true)
@@ -37,14 +35,11 @@ app.use(cors({
     },
     credentials: true
 }))
-
 app.use(express.json()); //Sirve para leer las archivos json
-app.use(cookieParser());
+const rutaPrincipal = "/api/v1/" //Es la ruta principal para el consumo de la APIS
+app.use(morgan('tiny')) //Se inicializa morgan en el proyecto
 
-const rutaPrincipal = "/api/v1/"
-
-app.use(morgan('tiny'))
-
+//Aqui se colocan todas las rutas que tendra la API
 app.use(rutaPrincipal + "user/", usuarioRoute);
 app.use(rutaPrincipal + "docente/", docenteRoute);
 app.use(rutaPrincipal + "distributivo/", actividadDistributivoRoute);
@@ -59,13 +54,12 @@ app.use(rutaPrincipal + "carrera/", carreraRouter);
 app.use(rutaPrincipal + "conclusionrecomendacion/", conclusionRouter)
 
 //Manejo de excepciones no controladas
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
     console.log(err);
     return res.status(500).json({ message: 'Error interno del servidor' });
 });
-
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, (err, res) => {
+const PORT = process.env.PORT || 8000; // Aqui se coloca el puerto de la aplicacion
+app.listen(PORT, (err, _res) => { //Aqui se inicia el servidor
     if (err) return console.log(err);
     console.log('Servidor corriendo ', PORT)
 });
