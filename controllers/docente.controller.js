@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import "../models/carrera.model.js";
-import "../models/facultad.model.js";
 import docenteModel from "../models/docente.model.js";
 import usuarioModel from "../models/usuario.model.js";
 import rolModel from "../models/rol.model.js";
@@ -95,16 +93,28 @@ docenteController.editar = async (req, res) => {
         const docenteFind = await docenteModel.findById(idDocente)
         if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente" })
         await docenteFind.updateOne(docente)
-        const user = await await usuarioModel.findById(docenteFind.usuario)
-        if (!user) return res.status(404).json({ message: "No se puedo modificar la cuenta del docente" })
-        user.username = docente.correo
-        await user.save()
         return res.status(200).json({ message: 'Se actualizó la información del docente' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 
+}
+
+docenteController.editarDedicacion = async (req, res) => {
+    const idDocente = req.params.id
+    if (!mongoose.isValidObjectId(idDocente)) return res.status(404).json({ message: "No se encontró al docente" })
+    const dedicacion = req.body.dedicacion
+    if (!dedicacion) return res.status(404).json({ message: 'No existe la dedicación, comuníquese con el administrador' })
+    try {
+        const docenteFind = await docenteModel.findById(idDocente)
+        if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente, comuníquese con el administrador" })
+        await docenteFind.updateOne({dedicacion})
+        return res.status(200).json({ message: 'Se actualizó con exito su dedicación' })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: "Error interno del servidor" })
+    }
 }
 
 export default docenteController;

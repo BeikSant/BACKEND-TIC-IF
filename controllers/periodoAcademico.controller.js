@@ -41,6 +41,18 @@ periodoAcademicoController.eliminar = async (req, res) => {
     return res.status(200).json({ message: "Periodo eliminado con éxito" })
 }
 
+periodoAcademicoController.editar = async (req, res) => {
+    const periodoBody = req.body
+    const idperiodo = req.params.id
+    console.log(idperiodo)
+    if (!mongoose.isValidObjectId(idperiodo)) return res.status(404).json({message: "No existe el periodo académico"})
+    const periodo = await periodoAcademicoModel.findById(idperiodo)
+    if (!periodo) return res.status(404).json({message: "No existe el periodo académico"})
+    if (!periodo.estado)  return res.status(404).json({message: "No se puede editar el periodo académico"})
+    await periodo.updateOne(periodoBody)
+    return res.status(200).json({message: "Periodo académico editado con éxito"})
+}
+
 const cambiarEstadoUltimoPeriodo = async () => {
     try {
         const periodo = await periodoAcademicoModel.findOne({ estado: true })

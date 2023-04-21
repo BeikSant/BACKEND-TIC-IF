@@ -17,7 +17,7 @@ usuarioController.login = async (req, res) => {
         const comparePassword = await user.comparePassword(password)
         if (!comparePassword) return res.status(404).json({ message: 'Credenciales incorrectas' })
         if (!user.estado) return res.status(404).json({ message: 'La cuenta se encuentra inactiva' })
-       
+
         const fechaExpire = new Date();
         //fechaExpire.setSeconds(fechaExpire.getSeconds() + 10);
         fechaExpire.setHours(fechaExpire.getHours() + 12);
@@ -39,7 +39,7 @@ usuarioController.login = async (req, res) => {
 
 usuarioController.verificarsesion = async (req, res) => {
     const rol = req.user.rol
-    return res.status(200).json({message: "OK", rol: rol})
+    return res.status(200).json({ message: "OK", rol: rol })
 }
 
 usuarioController.updatePassword = async (req, res) => {
@@ -130,10 +130,14 @@ usuarioController.recuperarPassword = async (req, res) => {
 }
 
 usuarioController.cambiarEstado = async (req, res) => {
+
     const cedula = req.params.docente
+    const director = req.user.docente
+
     try {
         const docente = await docenteModel.findOne({ cedula: cedula })
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
+        if (director == docente._id) return res.status(404).json({ message: "No puede cambiar el estado de su propia cuenta" })
         const usuario = await usuarioModel.findById(docente.usuario)
         if (!usuario) return res.status(404).json({ message: "No se encontró la cuenta" })
         const estado = usuario.estado
@@ -147,16 +151,20 @@ usuarioController.cambiarEstado = async (req, res) => {
 }
 
 usuarioController.cambiarRol = async (req, res) => {
+    const director = req.user.docente
     const iddocente = req.params.docente
     const newrol = req.body.newrol
+
+    //Verifica si el director esta cambiando el rol de su misma cuenta
+    if (director == iddocente) return res.status(404).json({ message: "No puede cambiar el rol de su propia cuenta" })
     const docente = await docenteModel.findById(iddocente)
     if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
     const usuario = await usuarioModel.findById(docente.usuario)
     if (!usuario) return res.status(404).json({ message: "No se encontró la cuenta" })
-    const rol = await rolModel.findOne({nombre: newrol})
+    const rol = await rolModel.findOne({ nombre: newrol })
     usuario.rol = rol._id
     await usuario.save()
-    return res.status(200).json({message: 'Se ha cambiado el rol del docente con éxito'})
+    return res.status(200).json({ message: 'Se ha cambiado el rol del docente con éxito' })
 }
 
 export default usuarioController;
