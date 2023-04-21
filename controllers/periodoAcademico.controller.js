@@ -8,7 +8,7 @@ periodoAcademicoController.crear = async (req, res) => {
     const periodo = {
         nombre: req.body.periodo.nombre.toString(),
         fechaInicio: new Date(req.body.periodo.fechaInicio),
-        fechaFin: new Date(req.body.periodo.fechaFin)
+        fechaFin: req.body.periodo.fechaFin != '' ? new Date(req.body.periodo.fechaFin) : ''
     }
     const cambiarEstado = await cambiarEstadoUltimoPeriodo()
     if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el nuevo periodo académico" })
