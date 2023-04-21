@@ -38,7 +38,8 @@ actividadDistributivoController.guardarTodos = async (req, res) => {
         for (let ad of fs.actividadesDistributivo) {
             const data = {
                 sigla: ad.sigla.toString(),
-                nombre: ad.nombre.toString(),
+                descripcion: ad.descripcion.toString(),
+                
                 funcionSustantiva: funcionSustantiva.id
             }
             const actiDis = await actividadDistributivoModel.create(data)
