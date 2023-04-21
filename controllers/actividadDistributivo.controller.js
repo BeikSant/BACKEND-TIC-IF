@@ -28,7 +28,7 @@ actividadDistributivoController.obtenerPorFuncion = async (req, res) => {
 actividadDistributivoController.guardarTodos = async (req, res) => {
     const resCambiarEstado = await cambiarEstado()
     if (resCambiarEstado == "error") res.status(404).json({ message: "Ocurrio un error al cambiar el estado de las actividades" })
-    const fsWithActividades = req.body.actividades.funcionesSustantivas
+    const fsWithActividades = req.body.actividades
     let actividadesNoGuardadas = {}
     for (let fs of fsWithActividades) {
         let funcionSustantiva = await funcionSustantivaModel.findOne({ nombre: fs.nombre.toString() })
