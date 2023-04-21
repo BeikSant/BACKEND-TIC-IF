@@ -17,7 +17,7 @@ docenteController.obtenerTodos = async (req, res) => {
         }
     }]).lean()
     for (let d of docentes) {
-        if (d.cedula == docente.cedula) {
+        if (d.correo == docente.correo) {
             d.isActual = true
             break;
         }
@@ -25,7 +25,7 @@ docenteController.obtenerTodos = async (req, res) => {
     return res.status(200).json(docentes)
 }
 
-//Permite obtener un docente por su cedula de la base de datos
+//Permite obtener un docente por su id de la base de datos
 docenteController.obtenerUno = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
     try {
@@ -57,13 +57,11 @@ docenteController.crear = async (req, res) => {
             segundoNombre: req.body.segundoNombre.toString(),
             primerApellido: req.body.primerApellido.toString(),
             segundoApellido: req.body.segundoApellido.toString(),
-            cedula: req.body.cedula.toString(),
             correo: req.body.correo.toString(),
-            dedicacion: req.body.toString(),
+            dedicacion: req.body.dedicacion.toString(),
         }
         console.log(docente)
         if ((await docenteModel.find({ correo: docente.correo })).length > 0) return res.status(404).json({ message: 'El correo electrónico pertenece a otro docente' })
-        if ((await docenteModel.find({ cedula: docente.cedula })).length > 0) return res.status(404).json({ message: 'La cedula ya pertenece a otro docente' })
         const iddirector = req.user.docente
         //Obtiendo la carrera del director
         const director = await docenteModel.findById(iddirector)
@@ -73,7 +71,7 @@ docenteController.crear = async (req, res) => {
         const doc = await docenteModel.create(docente);
         const usuario = await usuarioModel.create({
             username: doc.correo,
-            password: doc.cedula,
+            password: doc.primerNombre + '.' + doc.primerApellido + '@' + 'Docente',
             rol: rol._id,
         })
         if (!usuario) {
@@ -115,7 +113,7 @@ docenteController.editarDedicacion = async (req, res) => {
     try {
         const docenteFind = await docenteModel.findById(idDocente)
         if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente, comuníquese con el administrador" })
-        await docenteFind.updateOne({dedicacion})
+        await docenteFind.updateOne({ dedicacion })
         return res.status(200).json({ message: 'Se actualizó con exito su dedicación' })
     } catch (error) {
         console.log(error)

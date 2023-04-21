@@ -130,11 +130,11 @@ usuarioController.recuperarPassword = async (req, res) => {
 
 usuarioController.cambiarEstado = async (req, res) => {
 
-    const cedula = req.params.docente
+    const id = req.params.docente
     const director = req.user.docente
 
     try {
-        const docente = await docenteModel.findOne({ cedula: cedula })
+        const docente = await docenteModel.findById(id)
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
         if (director == docente._id) return res.status(404).json({ message: "No puede cambiar el estado de su propia cuenta" })
         const usuario = await usuarioModel.findById(docente.usuario)

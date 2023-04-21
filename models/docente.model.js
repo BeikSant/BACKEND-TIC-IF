@@ -5,7 +5,7 @@ const docenteSchema = new Schema({
     segundoNombre: { type: String, default: ''},
     primerApellido: { type: String, required: true},
     segundoApellido: { type: String, required: true},
-    cedula: { type: String, required: true, unique: true},
+    //cedula: { type: String, required: true, unique: true},
     correo: { type: String, required: true, unique: true},
     dedicacion: { type: String, required: true},
     carrera: {type: Schema.Types.ObjectId, ref: 'carrera'},

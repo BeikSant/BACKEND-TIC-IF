@@ -53,7 +53,6 @@ export default {
                 segundoNombre: 'Antonio',
                 primerApellido: 'Santorum',
                 segundoApellido: 'Sasaguay',
-                cedula: '1950031375',
                 correo: 'beiker.santorum@unl.edu.ec',
                 dedicacion: 'Tiempo Completo',
                 carrera: carrera._id,
