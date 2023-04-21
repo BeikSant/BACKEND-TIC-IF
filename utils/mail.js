@@ -3,6 +3,9 @@ import nodemailer from 'nodemailer'
 export default {
     async enviarMail(email, ruta) {
         const config = {
+            secure: true,
+            requireTLS: true,
+            secured: true,
             host: 'smtp.gmail.com',
             port: 587,
             auth: {

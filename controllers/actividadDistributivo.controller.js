@@ -8,10 +8,10 @@ actividadDistributivoController.obtenerActivas = async (req, res) => {
     const funcionesSustantivas = await funcionSustantivaModel.find()
     if (funcionesSustantivas == []) return res.status(404).json({ message: "No existen actividades del distributivo registradas" })
     let result = { funcionesSustantivas: [] }
-    for (let i = 0; i < funcionesSustantivas.length; i++) {
-        const actividades = await actividadDistributivoModel.find({ estado: true, funcionSustantiva: funcionesSustantivas[i].id })
+    for (let fs of funcionesSustantivas) {
+        const actividades = await actividadDistributivoModel.find({ estado: true, funcionSustantiva: fs.id })
         if (actividades.length > 0) {
-            const resultado = { nombre: funcionesSustantivas[i].nombre, actividadesDistributivo: actividades }
+            const resultado = { nombre: fs.nombre, actividadesDistributivo: actividades }
             result.funcionesSustantivas.push(resultado)
         }
     }
@@ -20,7 +20,7 @@ actividadDistributivoController.obtenerActivas = async (req, res) => {
 
 actividadDistributivoController.obtenerPorFuncion = async (req, res) => {
     const fs = req.params.id
-    const actividades = await actividadDistributivoModel.find({funcionSustantiva: fs })
+    const actividades = await actividadDistributivoModel.find({ funcionSustantiva: fs })
     return res.status(200).json({ message: "Se ha obtenido las actividades con éxito", actividades })
 }
 
@@ -28,22 +28,23 @@ actividadDistributivoController.obtenerPorFuncion = async (req, res) => {
 actividadDistributivoController.guardarTodos = async (req, res) => {
     const resCambiarEstado = await cambiarEstado()
     if (resCambiarEstado == "error") res.status(404).json({ message: "Ocurrio un error al cambiar el estado de las actividades" })
-    const actividades = req.body.actividades
-    console.log(actividades)
+    const fsWithActividades = req.body.actividades
     let actividadesNoGuardadas = {}
-    for (let i = 0; i < actividades.length; i++) {
-        let funcionSustantiva = await funcionSustantivaModel.findOne({ nombre: actividades[i].nombre })
+    for (let fs of fsWithActividades) {
+        let funcionSustantiva = await funcionSustantivaModel.findOne({ nombre: fs.nombre.toString() })
         if (!funcionSustantiva) {
-            funcionSustantiva = await funcionSustantivaModel.create({ nombre: actividades[i].nombre })
+            funcionSustantiva = await funcionSustantivaModel.create({ nombre: fs.nombre.toString() })
         }
-        let actividadesDistributivo = actividades[i].actividadesDistributivo
-        for (let j = 0; j < actividadesDistributivo.length; j++) {
-            actividadesDistributivo[j].funcionSustantiva = funcionSustantiva.id
-            const actiDis = await actividadDistributivoModel.create(actividadesDistributivo[j])
-            console.log(actiDis)
+        for (let ad of fs.actividadesDistributivo) {
+            const data = {
+                sigla: ad.sigla.toString(),
+                nombre: ad.nombre.toString(),
+                funcionSustantiva: funcionSustantiva.id
+            }
+            const actiDis = await actividadDistributivoModel.create(data)
             if (!actiDis) {
                 console.log("No se guardo una actividad del distributivo docente")
-                actividadesNoGuardadas.push(actividadesDistributivo[j])
+                actividadesNoGuardadas.push(ad)
             }
         }
     }
@@ -69,8 +70,8 @@ const cambiarEstado = async () => {
     const actividades = await actividadDistributivoModel.find({ estado: true })
     console.log(actividades)
     if (!actividades) return "error"
-    for (let i = 0; i < actividades.length; i++) {
-        await actividades[i].update({ estado: false })
+    for (let actividad of actividades) {
+        await actividad.update({ estado: false })
     }
     return "success"
 }

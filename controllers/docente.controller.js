@@ -16,12 +16,10 @@ docenteController.obtenerTodos = async (req, res) => {
             path: 'rol',
         }
     }]).lean()
-    for (let i = 0; i < docentes.length; i++) {
-        console.log(docentes[i].cedula, docente.cedula)
-        if (docentes[i].cedula == docente.cedula) {
-            console.log("IsIgual")
-            docentes[i].isActual = true
-            i = docentes.length + 1
+    for (let d of docentes) {
+        if (d.cedula == docente.cedula) {
+            d.isActual = true
+            break;
         }
     }
     return res.status(200).json(docentes)
@@ -54,7 +52,15 @@ docenteController.obtenerUno = async (req, res) => {
 //Permite crear un docente en la base de datos
 docenteController.crear = async (req, res) => {
     try {
-        let docente = req.body;
+        let docente = {
+            primerNombre: req.body.primerNombre.toString(),
+            segundoNombre: req.body.segundoNombre.toString(),
+            primerApellido: req.body.primerApellido.toString(),
+            segundoApellido: req.body.segundoApellido.toString(),
+            cedula: req.body.cedula.toString(),
+            correo: req.body.correo.toString(),
+            dedicacion: req.body.toString(),
+        }
         console.log(docente)
         if ((await docenteModel.find({ correo: docente.correo })).length > 0) return res.status(404).json({ message: 'El correo electrónico pertenece a otro docente' })
         if ((await docenteModel.find({ cedula: docente.cedula })).length > 0) return res.status(404).json({ message: 'La cedula ya pertenece a otro docente' })

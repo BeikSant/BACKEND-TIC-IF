@@ -37,8 +37,8 @@ informeFinalController.obtenerTodosPorDocente = async (req, res) => {
             .lean()
         if (!informes) return res.status(404).json({ message: "No se pudo obtener los informes del docente" })
         console.log(informes)
-        for (let i = 0; i < informes.length; i++) {
-            if (informes[i].periodoAcademico == null){
+        for (const informe of informes) {
+            if (informe.periodoAcademico == null){
                 await informeModel.findByIdAndDelete(informes[i]._id)
             }
         }

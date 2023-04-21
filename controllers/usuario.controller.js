@@ -11,15 +11,14 @@ const usuarioController = {}
 usuarioController.login = async (req, res) => {
     const { username, password } = req.body
     try {
-        const user = await usuarioModel.findOne({ username: username }).populate('rol')
+        const user = await usuarioModel.findOne({ username: username.toString() }).populate('rol')
         if (!user) return res.status(404).json({ message: 'Credenciales incorrectas' })
         const docente = await docenteModel.findOne({ usuario: user._id })
-        const comparePassword = await user.comparePassword(password)
+        const comparePassword = await user.comparePassword(password.toString())
         if (!comparePassword) return res.status(404).json({ message: 'Credenciales incorrectas' })
         if (!user.estado) return res.status(404).json({ message: 'La cuenta se encuentra inactiva' })
 
         const fechaExpire = new Date();
-        //fechaExpire.setSeconds(fechaExpire.getSeconds() + 10);
         fechaExpire.setHours(fechaExpire.getHours() + 12);
 
         const dataUser = {
@@ -153,8 +152,7 @@ usuarioController.cambiarEstado = async (req, res) => {
 usuarioController.cambiarRol = async (req, res) => {
     const director = req.user.docente
     const iddocente = req.params.docente
-    const newrol = req.body.newrol
-
+    const newrol = req.body.newrol.toString()
     //Verifica si el director esta cambiando el rol de su misma cuenta
     if (director == iddocente) return res.status(404).json({ message: "No puede cambiar el rol de su propia cuenta" })
     const docente = await docenteModel.findById(iddocente)
