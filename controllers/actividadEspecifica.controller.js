@@ -41,8 +41,8 @@ actividadEspecificaController.guardar = async (req, res) => {
     const idInforme = req.params.informe.toString()
     const idDistributivo = req.params.distributivo.toString()
     const actividad = {
-        nombre: req.body.actividad.toString(),
-        horas: +req.body.horas,
+        nombre: req.body.actividad.nombre.toString(),
+        horas: +req.body.actividad.horas,
         informeFinal: idInforme,
         actividadDistributivo: idDistributivo
     }

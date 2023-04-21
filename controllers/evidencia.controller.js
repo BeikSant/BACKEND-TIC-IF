@@ -17,7 +17,7 @@ evidenciaController.obtenerPorActividadEspecifica = async (req, res) => {
 evidenciaController.guardar = async (req, res) =>{
     const idEspecifica = req.body.evidencia.actividadEspecifica.toString()
     let evidenciaBody =  {
-        nombre: req.body.evidencia.toString(),
+        nombre: req.body.evidencia.nombre.toString(),
         actividadEspecifica: idEspecifica
     }
     if (!mongoose.isValidObjectId(idEspecifica)) return res.status(404).json({ message: "No se encontró la actividad específica"})
