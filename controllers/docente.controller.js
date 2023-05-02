@@ -114,7 +114,7 @@ docenteController.editarDedicacion = async (req, res) => {
         const docenteFind = await docenteModel.findById(idDocente)
         if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente, comuníquese con el administrador" })
         await docenteFind.updateOne({ dedicacion })
-        return res.status(200).json({ message: 'Se actualizó con exito su dedicación' })
+        return res.status(200).json({ message: 'Se actualizó con éxito su dedicación' })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Error interno del servidor" })

@@ -39,7 +39,7 @@ formatoController.crear = async (req, res) => {
     if (formatoActual != null) await formatoActual.updateOne({ estado: false })
     const formatoNuevo = await formatoModel.create(formato)
     if (!formatoNuevo) return res.status(404).json({ message: "Ocurrio un error al crear el formato" })
-    return res.status(200).json({ message: 'El formato del informe final se ha creado con exito' })
+    return res.status(200).json({ message: 'El formato del informe final se ha creado con éxito' })
 }
 
 formatoController.obtenerTodos = async (req, res) => {
@@ -73,7 +73,7 @@ formatoController.actualizar = async (req, res) => {
         }
     }
     await formato.updateOne(req.body.formato)
-    return res.status(200).json({ message: 'El formato se ha actualizó con exito' })
+    return res.status(200).json({ message: 'El formato se ha actualizó con éxito' })
 }
 
 formatoController.cambiarEstado = async (req, res) => {
@@ -82,7 +82,7 @@ formatoController.cambiarEstado = async (req, res) => {
     const formatoNuevo = await formatoModel.findById(req.params.id)
     if (!formatoNuevo) return res.status(404).json({ message: 'No se pudo encontrar el formato' })
     await formatoNuevo.update({ estado: true })
-    return res.status(200).json({ message: 'Se ha actualizado con exito el formato del informe final' })
+    return res.status(200).json({ message: 'Se ha actualizado con éxito el formato del informe final' })
 }
 
 formatoController.obtenerActivo = async (req, res) => {

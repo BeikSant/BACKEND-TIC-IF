@@ -50,7 +50,7 @@ actividadDistributivoController.guardarTodos = async (req, res) => {
         }
     }
     return res.status(200).json({
-        message: "Se han guardado las nuevas actividades del distribuvo con exito",
+        message: "Se han guardado las nuevas actividades del distribuvo con éxito",
         error_guardar_actividades: actividadesNoGuardadas
     })
 }

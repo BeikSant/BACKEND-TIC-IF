@@ -49,7 +49,7 @@ evidenciaController.editar = async (req, res) =>{
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No se encontró la evidencia"})
     const evidencia = await evidenciaModel.findById(id)
     if (!evidencia) return res.status(404).json({ message: "No se encontró la evidencia"})
-    if (evidencia.orden && evidencia.orden != evidenciaBody.orden ){
+    if (evidenciaBody.orden && evidencia.orden != evidenciaBody.orden ){
         await ordenarEvidencia(evidencia.orden, evidenciaBody.orden, evidencia.actividadEspecifica)
     }
     await evidencia.update(evidenciaBody)

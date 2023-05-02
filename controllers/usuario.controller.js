@@ -27,7 +27,7 @@ usuarioController.login = async (req, res) => {
             rol: user.rol.nombre,
             expireToken: fechaExpire
         }
-        const { token } = generateToken(dataUser)
+        const token = generateToken(dataUser)
         return res.status(200).json({ token })
     } catch (err) {
         console.log(err)
