@@ -3,9 +3,7 @@ import nodemailer from 'nodemailer'
 export default {
     async enviarMail(email, ruta) {
         const config = {
-            //secure: true,
-            //requireTLS: true,
-            secured: true,
+            secure: true,
             host: 'smtp.gmail.com',
             port: 587,
             auth: {
@@ -13,9 +11,8 @@ export default {
                 pass: process.env.PASS_MAIL
             }
         }
-
         const mensaje = {
-            from: 'santorumbeiker069@gmail.com',
+            from: process.env.USER_MAIL,
             to: email,
             subject: 'Recuperación de la cuenta',
             html: ` 
@@ -48,6 +45,7 @@ export default {
             await transport.sendMail(mensaje)
             return 'success'
         } catch (error) {
+            console.log(error)
             return 'error'
         }
     }

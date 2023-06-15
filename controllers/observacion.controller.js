@@ -20,7 +20,6 @@ observacionController.guardar = async (req, res) =>{
         nombre: req.body.observacion.nombre.toString(),
         actividadEspecifica: idEspecifica
     }
-    if (req.body.observacion.enlace) observacionBody.enlace = req.body.observacion.enlace.toString()
     if (!mongoose.isValidObjectId(idEspecifica)) return res.status(404).json({ message: "No se encontró la actividad específica"})
     const actividadEspecifica = await actividadEspecificaModel.findById(idEspecifica)
     if (!actividadEspecifica) return res.status(404).json({ message: "No se encontró la actividad específica"})

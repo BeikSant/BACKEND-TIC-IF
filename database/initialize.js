@@ -8,25 +8,20 @@ import formatoModel from "../models/formato.model.js"
 export default {
     async initData() {
         try {
-            console.log("Verificando inicializacion de datos")
+            console.log("Verificando si existen datos en la base de datos")
             const usuarios = await usuarioModel.find()
-            if (!usuarios) return console.log("Ocurrió un error al iniciar el servidor con datos predeterminados")
-            if (usuarios.length != 0) return console.log("Ya existen datos registrados en el servidor")
-
+            if (usuarios.length != 0) return console.log("Ya existen datos registrados en la base de datos")
             const dataFacultad = {
                 nombre: "Facultad de la Energía, las Industrias y los Recursos Naturales no Renovables",
                 siglas: "FEIRNNR"
             }
-
             const facultad = await facultadModel.create(dataFacultad)
             const dataCarrera = {
                 nombre: 'Ingeniería en Computación',
                 siglas: 'IC',
                 facultad: facultad._id
             }
-
             const carrera = await carreraModel.create(dataCarrera)
-
             const dataRol1 = {
                 nombre: 'docente',
                 descripcion: "Es el usuario normal del sistema"
@@ -38,16 +33,12 @@ export default {
 
             await rolModel.create(dataRol1)
             const rol2 = await rolModel.create(dataRol2)
-
             const dataUsuario = {
                 username: 'beiker.santorum@unl.edu.ec',
                 password: process.env.PASSWORD_INIT,
                 rol: rol2._id
             }
-
             const usuario = await usuarioModel.create(dataUsuario)
-
-
             const newDataDocente = {
                 primerNombre: 'Beiker',
                 segundoNombre: 'Antonio',
@@ -58,9 +49,7 @@ export default {
                 carrera: carrera._id,
                 usuario: usuario._id
             }
-
             await docenteModel.create(newDataDocente)
-
             const dataFormato = {
                 "nombreFormato": "FORMATO DE INFORME FINAL DE CUMPLIMIENTO DEL TRABAJO ACADÉMICO",
                 "facultad": "Facultad",
@@ -79,10 +68,8 @@ export default {
                 "tipo": "POR DEFECTO",
                 "actividadesDistributivo": "Actividades del distributivo docente"
             }
-
             await formatoModel.create(dataFormato)
-
-            return console.log("Datos por defecto iniciados con normalidad")
+            return console.log("Datos predeterminados cargados a la base de datos con normalidad")
         } catch (error) {
             console.log("Ocurrió un error al inicializar los datos predeterminados en MongoDB:", error)
         }

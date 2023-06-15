@@ -85,7 +85,6 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
         user.tokenExpire = fechaExpire
         const enviarEmail = await mail.enviarMail(user.username, enlace + '/' + user.tokenRecuperacion)
         if (enviarEmail == 'error') return res.status(404).json({ message: "Error al enviar el correo" })
-        console.log("Aqui se envia el email")
         await user.save()
         return res.status(201).json({ message: "Email enviado a su correo" })
     } catch (error) {

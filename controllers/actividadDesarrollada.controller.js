@@ -31,7 +31,7 @@ actividadDesarrolladaController.guardar = async (req, res) => {
         const actividadEspecifica = await actividadEspecificaModel.findById(idEspecifica)
         if (!actividadEspecifica) return res.status(404).json({ message: "No se encontró la actividad específica" })
         const actividades = await actividadDesarrolladaModel.find({actividadEspecifica: idEspecifica})
-        const orden = actividades.length ? (+ actividades.length + 1) : 0 
+        const orden = actividades.length ? (+ actividades.length + 1) : 1 
         actividadDesarrolladaBody.orden = orden
         const actividadDesarrollada = await actividadDesarrolladaModel.create(actividadDesarrolladaBody)
         if (!actividadDesarrollada) return res.status(404).json({ message: "No se pudo guardar la actividad desarrollada" })

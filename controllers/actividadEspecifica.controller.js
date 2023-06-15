@@ -44,6 +44,7 @@ actividadEspecificaController.guardar = async (req, res) => {
         nombre: req.body.actividad.nombre.toString(),
         horas: +req.body.actividad.horas,
         informeFinal: idInforme,
+        requerido: req.body.actividad.requerido,
         actividadDistributivo: idDistributivo
     }
     if (!mongoose.isValidObjectId(idInforme)) return res.status(404).json({ message: "No existe el informe final" })
@@ -62,6 +63,7 @@ actividadEspecificaController.eliminar = async (req, res) => {
     if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se encontro la actividad especifica del informe final" })
     const actividad = await actividadEspecificaModel.findById(idActividad)
     if (!actividad) return res.status(404).json({ message: "No se encontro la actividad especifica del informe final" })
+    if (actividad.requerido) return res.status(404).json({ message: "No puede eliminar esta actividad" })
     await actividad.delete()
     return res.status(200).json({ message: "Se eliminó la actividad específica con éxito" })
 }
@@ -70,6 +72,7 @@ actividadEspecificaController.eliminar = async (req, res) => {
 actividadEspecificaController.actualizar = async (req, res) => {
     const idActividad = req.params.id
     const actividad = req.body.actividad
+    console.log(actividad)
     if (!mongoose.isValidObjectId(idActividad)) return res.status(400).json({ message: "No se ha podido encontrar la actividad especifica" })
     const actividadEspecifica = await actividadEspecificaModel.findById(idActividad)
     if (!actividadEspecifica) return res.status(400).json({ message: "No se ha podido encontrar la actividad especifica" })
