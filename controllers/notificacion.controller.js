@@ -30,35 +30,47 @@ export default {
             notificacionSave = await notificacionModel.create(notificacion)
         }
         notificacionSave = notificacionSave.populate('origen')
-        io.emit('notificacion', {...(await notificacionSave).toJSON(), destinos})
+        io.emit('notificacion', { ...(await notificacionSave).toJSON(), destinos })
         return res.status(200).json({ message: "La notificación se ha enviado con éxito", notificacionSave })
     },
 
     async obtenerTodasPorDocente(req, res) {
         const idDocente = req.user.docente
-        const notificaciones = await notificacionModel.find({ destino: idDocente }).populate('origen').sort({ created_at: 'desc' }).lean()
-        return res.status(200).json({ notificaciones })
+        const page = Number(req.params.page)
+        const perPage = Number(req.params.perPage)
+
+        const notificaciones = await notificacionModel
+            .find({ destino: idDocente })
+            .populate('origen')
+            .sort({ created_at: 'desc' })
+            .limit(perPage)
+            .skip((page - 1) * perPage)
+            .exec()
+            
+        const pages =  Math.ceil(await notificacionModel.count({ destino: idDocente }) / perPage)
+        return res.status(200).json({ notificaciones, pages, page, perPage })
     },
 
     async obtenerNoLeidos(req, res) {
         const idDocente = req.user.docente
         const fechaActual = new Date();
         fechaActual.setHours(fechaActual.getHours() - 1); // Fecha hace 12 horas
-        const notificaciones = await notificacionModel.find({ 
+        const notificaciones = await notificacionModel.find({
             destino: idDocente,
             $or: [
                 { leido: false },
                 { leido: true, updated_at: { $gte: fechaActual } }
-              ]})
-        .populate('origen').sort({ created_at: 'desc' }).lean()
+            ]
+        })
+            .populate('origen').sort({ created_at: 'desc' }).lean()
         return res.status(200).json({ notificaciones })
     },
 
     async leeNotificacion(req, res) {
         const idNotificacion = req.params.id
         const notificacion = await notificacionModel.findById(idNotificacion)
-        if (!notificacion) return res.status(404).message({message: "No se encontro la notificacion"})
-        await notificacion.updateOne({leido: true})
-        return res.status(200).json({message: "Notificación leída"})
+        if (!notificacion) return res.status(404).message({ message: "No se encontro la notificacion" })
+        await notificacion.updateOne({ leido: true })
+        return res.status(200).json({ message: "Notificación leída" })
     }
 }
