@@ -8,7 +8,7 @@ const informeSchema = new Schema({
     estado: {
         type: String,
         enum: ['iniciado', 'completado', 'enviadoFirmar', 'novedadDocumento'],
-        default: 'noIniciado'
+        default: 'iniciado'
     },
     novedadDocumento: {
 
