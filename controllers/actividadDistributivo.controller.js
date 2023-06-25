@@ -11,7 +11,7 @@ actividadDistributivoController.obtenerActivas = async (req, res) => {
     for (let fs of funcionesSustantivas) {
         const actividades = await actividadDistributivoModel.find({ estado: true, funcionSustantiva: fs.id })
         if (actividades.length > 0) {
-            const resultado = { nombre: fs.nombre, actividadesDistributivo: actividades }
+            const resultado = { nombre: fs.nombre, _id: fs._id , actividadesDistributivo: actividades }
             result.funcionesSustantivas.push(resultado)
         }
     }

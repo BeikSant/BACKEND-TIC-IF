@@ -8,13 +8,13 @@ const informeFinalController = {}
 
 informeFinalController.obtenerPorPeriodo = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
-    const nombrePeriodo = req.params.periodo
+    const periodo = req.params.periodo
     const id = req.user.docente
     try {
         //const docente = await docenteModel.findById(id)
         const docente = await docenteModel.findById(id)
         if (!docente) return res.status(404).json({ message: "No se pudo encontrar al docente" })
-        const periodoAcademico = await periodoAcademicoModel.findOne({ nombre: nombrePeriodo })
+        const periodoAcademico = await periodoAcademicoModel.findById(periodo)
         if (!periodoAcademico) return res.status(404).json({ message: "No se pudo encontrar el periodo académico" })
         let informe = await informeModel.findOne({ docente: docente.id, periodoAcademico: periodoAcademico.id })
         if (!informe && periodoAcademico.estado === false) return res.status(404).json({ message: "El informe final no existe" })
@@ -76,16 +76,14 @@ informeFinalController.asignarFormato = async (req, res) => {
     return res.status(200).json({ message: 'El formato se ha asigando al informe final con éxito' })
 }
 
-informeFinalController.guardarInformeFirmaDocente = async (req, res, next) => {
-    if (!req.file) {
-        return res.status(404).json({ message: 'Debe proporcionar un documento' });
-    }
-    
+informeFinalController.guardarInformeFirmaDocente = async (req, res) => {
+    if (!req.file) return res.status(404).json({ message: 'Debe proporcionar un documento' });
     if (req.body.firmado_por == 'docente') {
-        const informe = await informeModel.findOne({ docente: req.user.docente, periodoAcademico: req.periodo.id })
+        console.log(req.periodo._id.toString())
+        const informe = await informeModel.findOne({ docente: req.user.docente, periodoAcademico: req.periodo._id.toString() });
         await informe.updateOne({ documento_firma_docente: req.periodo.nombre + '/' + req.nombreDocumento, estado: 'enviadoFirmar'})
     } else if (req.body.firmado_por == 'director'){
-        const informe = await informeModel.findOne({ docente: req.body.docente, periodoAcademico: req.periodo.id })
+        const informe = await informeModel.findOne({ docente: req.body.docente, periodoAcademico: req.periodo._id.toString() })
         await informe.updateOne({ documento_firma_director: req.periodo.nombre + '/' + req.nombreDocumento, estado: 'completado' })
     }
     return res.status(200).json({ message: 'Informe final guardado con éxito' })

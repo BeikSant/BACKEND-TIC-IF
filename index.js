@@ -39,6 +39,11 @@ app.use(express.static('public'))  //Sirve hacer publico el arcivos public
 app.use(express.json()); //Sirve para leer las archivos json
 app.use(morgan('tiny')) //Se inicializa morgan en el proyecto, para leer todas la peticiones al servidor
 
+// app.use((req, res, next) => {
+//     setTimeout(next, 2000);
+//     next()
+//   });
+
 const rutaPrincipal = "/api/v1/" //Es la ruta principal para el consumo de la APIS
 //Aqui se colocan todas las rutas que tendra la API
 app.use(rutaPrincipal + "user/", usuarioRoute);

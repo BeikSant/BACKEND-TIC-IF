@@ -10,6 +10,5 @@ informeFinalRouter.get('/all/:periodo', requireToken, isDirector, informeFinalCo
 informeFinalRouter.get('/:periodo', requireToken, informeFinalController.obtenerPorPeriodo)
 informeFinalRouter.post('/upload', requireToken, upload, informeFinalController.guardarInformeFirmaDocente)
 informeFinalRouter.post('/estado/:informe', requireToken, informeFinalController.cambiarEstado)
-informeFinalRouter.post('/:informe/:formato', requireToken, informeFinalController.asignarFormato)
 
 export default informeFinalRouter

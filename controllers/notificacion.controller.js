@@ -20,7 +20,7 @@ export default {
         let notificacionSave = null
         if (notificacion.destino == null) {
             for (const docente of docentes) {
-                if (docente.usuario.rol.nombre.toLowerCase() == 'director' && docente._id != req.user.docente) {
+                if (docente.usuario.rol.nombre.toLowerCase() == 'director') {
                     notificacion.destino = docente._id
                     destinos.push(docente._id)
                     notificacionSave = await notificacionModel.create(notificacion)

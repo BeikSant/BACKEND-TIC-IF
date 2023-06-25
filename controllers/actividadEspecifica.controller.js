@@ -25,9 +25,9 @@ actividadEspecificaController.obtenerPorInforme = async (req, res) => {
             actividad.observacion = await observacionModel.find({ actividadEspecifica: actividad._id }).count();
             actividad.evidencia = await evidenciaModel.find({ actividadEspecifica: actividad._id }).count();
             actividad.actividadDesarrollada = await actividadDesarrolladaModel.find({ actividadEspecifica: actividad._id }).count();
+
         }
         return res.status(200).json({
-            message: actividades < 1 ? "No existen actividades específicas del informe final" : "Se pudo obtener las actividades del informe final",
             actividadesEspecificas: actividades
         })
     } catch (error) {
@@ -54,8 +54,8 @@ actividadEspecificaController.guardar = async (req, res) => {
     const actividadDistributivo = await actividadDistributivoModel.findById(idDistributivo)
     if (!actividadDistributivo) return res.status(404).json({ message: "No existe la actividad del distributivo" })
     const actividadEspecifica = await actividadEspecificaModel.create(actividad)
-    if (!actividadEspecifica) return res.status(404).json({ message: "No se pudo crear la actividad especifica" })
-    return res.json(200).status({ message: "La actividad especifica se ha creado con éxito" })
+    if (!actividadEspecifica) return res.status(404).json({ message: "Ocurrió un error al guardar la actividad" })
+    return res.status(200).json({ message: "Se ha guardado la actividad con éxito" })
 }
 
 actividadEspecificaController.eliminar = async (req, res) => {
@@ -65,7 +65,7 @@ actividadEspecificaController.eliminar = async (req, res) => {
     if (!actividad) return res.status(404).json({ message: "No se encontro la actividad especifica del informe final" })
     if (actividad.requerido) return res.status(404).json({ message: "No puede eliminar esta actividad" })
     await actividad.delete()
-    return res.status(200).json({ message: "Se eliminó la actividad específica con éxito" })
+    return res.status(200).json({ message: "Actividad eliminada con éxito" })
 }
 
 //Edita la informacion de una actividad específica
@@ -73,11 +73,11 @@ actividadEspecificaController.actualizar = async (req, res) => {
     const idActividad = req.params.id
     const actividad = req.body.actividad
     console.log(actividad)
-    if (!mongoose.isValidObjectId(idActividad)) return res.status(400).json({ message: "No se ha podido encontrar la actividad especifica" })
+    if (!mongoose.isValidObjectId(idActividad)) return res.status(400).json({ message: "No se ha podido encontrar la actividad" })
     const actividadEspecifica = await actividadEspecificaModel.findById(idActividad)
-    if (!actividadEspecifica) return res.status(400).json({ message: "No se ha podido encontrar la actividad especifica" })
+    if (!actividadEspecifica) return res.status(400).json({ message: "No se ha podido encontrar la actividad" })
     await actividadEspecifica.update(actividad)
-    return res.status(200).json({ message: "Se ha modificado la información de la actividad especifica con éxito" })
+    return res.status(200).json({ message: "Actividad actualizada con éxito" })
 }
 
 export default actividadEspecificaController

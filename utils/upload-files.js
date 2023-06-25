@@ -4,13 +4,11 @@ import fs from 'fs'
 import docenteModel from "../models/docente.model.js";
 
 async function obtenerPeriodoActivo() {
-    const periodoAcademico = await periodoAcademicoModel.findOne({ estado: true })
-    return periodoAcademico
+    return await periodoAcademicoModel.findOne({ estado: true }).lean()
 }
 
 async function obtenerDocente(id) {
-    const docente = await docenteModel.findById(id)
-    return docente
+    return await docenteModel.findById(id)
 }
 
 const FILEPATH = 'public/uploads/'
@@ -19,21 +17,20 @@ const MIMETYPES = ['application/pdf']
 const storage = multer.diskStorage({
     destination: async function (req, file, cb) {
         const periodo = await obtenerPeriodoActivo()
-        req.periodo = {
-            id: periodo._id,
-            nombre: periodo.nombre
-        }
+        req.periodo = periodo
         if (!fs.existsSync(FILEPATH + periodo.nombre)) fs.mkdirSync(FILEPATH + periodo.nombre);
-        console.log(periodo)
         cb(null, FILEPATH + periodo.nombre)
     },
     filename: async function (req, file, cb) {
-        //console.log(req.user)
         let signed = ''
-        if (req.body.firmado_por == 'docente') signed = 'SignedByDocente'
-        else if (req.body.firmado_por == 'director') signed = 'SignedByDocenteAndDirector'
-        else return cb(new Error("Proporcione si firmado_por es por 'docente' o 'director' "))
         const docente = await obtenerDocente(req.user.docente)
+        if (req.body.firmado_por == 'docente') {
+            signed = 'SignedByDocente'
+        }
+        else if (req.body.firmado_por == 'director') {
+            signed = 'SignedByDocenteAndDirector'
+        } 
+        else return cb(new Error("Proporcione si firmado_por es por 'docente' o 'director' "))
         const FILENAME = 'Informe-' + docente.primerNombre + '.' + docente.primerApellido + '-' + signed + '.pdf'
         if (fs.existsSync(FILEPATH + FILENAME)) fs.unlinkSync(FILEPATH + FILENAME)
         req.nombreDocumento = FILENAME
