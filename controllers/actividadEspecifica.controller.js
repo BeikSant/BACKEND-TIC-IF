@@ -53,16 +53,23 @@ actividadEspecificaController.guardar = async (req, res) => {
     if (!informe) return res.status(404).json({ message: "No existe el informe final" })
     const actividadDistributivo = await actividadDistributivoModel.findById(idDistributivo)
     if (!actividadDistributivo) return res.status(404).json({ message: "No existe la actividad del distributivo" })
-    const actividadEspecifica = await actividadEspecificaModel.create(actividad)
+    const actividadEspecifica = await (await actividadEspecificaModel
+        .create(actividad))
+        .populate({
+            path: 'actividadDistributivo',
+            populate: {
+                path: 'funcionSustantiva',
+            }
+        })
     if (!actividadEspecifica) return res.status(404).json({ message: "Ocurrió un error al guardar la actividad" })
-    return res.status(200).json({ message: "Se ha guardado la actividad con éxito" })
+    return res.status(200).json({ message: "Se ha guardado la actividad con éxito", actividadEspecifica })
 }
 
 actividadEspecificaController.eliminar = async (req, res) => {
     const idActividad = req.params.especifica
-    if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se encontro la actividad especifica del informe final" })
+    if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     const actividad = await actividadEspecificaModel.findById(idActividad)
-    if (!actividad) return res.status(404).json({ message: "No se encontro la actividad especifica del informe final" })
+    if (!actividad) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     if (actividad.requerido) return res.status(404).json({ message: "No puede eliminar esta actividad" })
     await actividad.delete()
     return res.status(200).json({ message: "Actividad eliminada con éxito" })
@@ -73,9 +80,9 @@ actividadEspecificaController.actualizar = async (req, res) => {
     const idActividad = req.params.id
     const actividad = req.body.actividad
     console.log(actividad)
-    if (!mongoose.isValidObjectId(idActividad)) return res.status(400).json({ message: "No se ha podido encontrar la actividad" })
+    if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     const actividadEspecifica = await actividadEspecificaModel.findById(idActividad)
-    if (!actividadEspecifica) return res.status(400).json({ message: "No se ha podido encontrar la actividad" })
+    if (!actividadEspecifica) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     await actividadEspecifica.update(actividad)
     return res.status(200).json({ message: "Actividad actualizada con éxito" })
 }
