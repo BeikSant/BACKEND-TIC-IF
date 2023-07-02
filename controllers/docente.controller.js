@@ -30,17 +30,12 @@ docenteController.obtenerUno = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
     try {
         const docente = await docenteModel.findById(req.user.docente)
-            .populate([{
-                path: 'carrera',
-                populate: {
-                    path: 'facultad',
-                }
-            }, {
+            .populate({
                 path: 'usuario',
                 populate: {
                     path: 'rol',
                 }
-            }])
+            })
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
         return res.status(200).json({ docente })
     } catch (error) {
@@ -61,14 +56,14 @@ docenteController.crear = async (req, res) => {
             dedicacion: req.body.dedicacion.toString(),
         }
         console.log(docente)
-        if ((await docenteModel.find({ correo: docente.correo })).length > 0) return res.status(404).json({ message: 'El correo electrónico pertenece a otro docente' })
+        if ((await docenteModel.find({ correo: docente.correo })).length > 0) return res.status(404).json({ message: 'El correo ya pertenece a otro docente' })
         const iddirector = req.user.docente
         //Obtiendo la carrera del director
         const director = await docenteModel.findById(iddirector)
         //Asignando la carrera del director al docente
         docente.carrera = director.carrera
         const rol = await rolModel.findOne({ nombre: 'docente' });
-        const doc = await docenteModel.create(docente);
+        const doc = await docenteModel.create(docente)
         const usuario = await usuarioModel.create({
             username: doc.correo,
             password: doc.primerNombre + '.' + doc.primerApellido + '@' + 'Docente',
@@ -80,7 +75,13 @@ docenteController.crear = async (req, res) => {
         }
         doc.usuario = usuario._id
         await doc.save()
-        return res.status(200).json({ message: 'Docente creado con éxito', docente: docente, usuario: usuario })
+        await doc.populate({
+            path: 'usuario',
+            populate: {
+                path: 'rol',
+            }
+        })
+        return res.status(200).json({ message: 'Docente creado con éxito', docente: doc })
     } catch (error) {
         console.log(error)
         return res.status(404).json({ message: 'Ocurrió un error al crear al docente' })
@@ -92,12 +93,19 @@ docenteController.editar = async (req, res) => {
     const idDocente = req.params.id
     if (!mongoose.isValidObjectId(idDocente)) return res.status(404).json({ message: "No se encontró al docente" })
     const docente = req.body
-    if (!docente) return res.status(404).json({ message: 'No existen campos a actualizar' })
     try {
         const docenteFind = await docenteModel.findById(idDocente)
         if (!docenteFind) return res.status(404).json({ message: "No se encontró al docente" })
         await docenteFind.updateOne(docente)
-        return res.status(200).json({ message: 'Se actualizó la información del docente' })
+        const docenteUpdt = await docenteModel.findById(idDocente)
+            .populate({
+                path: 'usuario',
+                populate: {
+                    path: 'rol',
+                }
+            })
+        console.log(docenteUpdt)
+        return res.status(200).json({ message: 'Información del docente actualizada con éxito', docente: docenteUpdt })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: "Error interno del servidor" })

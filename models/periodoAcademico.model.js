@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const periodoAcademicoSchema = new Schema({
     nombre: { type: String, required: true },
     fechaInicio: { type: Date, required: true},
-    fechaFin: { type: Date},
+    fechaFin: { type: Date, default: null},
     estado: { type: Boolean, default: true}
 }, {
     timestamps: {

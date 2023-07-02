@@ -7,8 +7,8 @@ const periodoAcademicoController = {}
 periodoAcademicoController.crear = async (req, res) => {
     const periodo = {
         nombre: req.body.periodo.nombre.toString(),
-        fechaInicio: new Date(req.body.periodo.fechaInicio),
-        fechaFin: req.body.periodo.fechaFin != '' ? new Date(req.body.periodo.fechaFin) : ''
+        fechaInicio: req.body.periodo.fechaInicio.toString(),
+        fechaFin: req.body.periodo.fechaFin != '' ? new Date(req.body.periodo.fechaFin) : null
     }
     const cambiarEstado = await cambiarEstadoUltimoPeriodo()
     if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el nuevo periodo académico" })
@@ -47,6 +47,7 @@ periodoAcademicoController.eliminar = async (req, res) => {
 
 periodoAcademicoController.editar = async (req, res) => {
     const periodoBody = req.body
+    console.log(periodoBody)
     const idperiodo = req.params.id
     console.log(idperiodo)
     if (!mongoose.isValidObjectId(idperiodo)) return res.status(404).json({message: "No existe el periodo académico"})
