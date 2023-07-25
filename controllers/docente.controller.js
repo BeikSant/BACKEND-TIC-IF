@@ -30,12 +30,18 @@ docenteController.obtenerUno = async (req, res) => {
     if (!req.user) return res.status(404).json({ message: "No se encontró al docente" })
     try {
         const docente = await docenteModel.findById(req.user.docente)
-            .populate({
+            .populate([{
                 path: 'usuario',
                 populate: {
                     path: 'rol',
                 }
-            })
+            },
+            {
+                path: 'carrera',
+                populate: {
+                    path: 'facultad',
+                }
+            }])
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
         return res.status(200).json({ docente })
     } catch (error) {

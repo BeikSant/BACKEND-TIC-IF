@@ -102,13 +102,6 @@ formatoController.eliminar = async (req, res) => {
     const formato = await formatoModel.findById(idformato)
     const informes = await informeModel.find({ formato: formato._id }).populate('periodoAcademico').sort({ created_at: 1 }).lean()
     if (formato.estado) return res.status(404).json({ message: 'Este formato no se puede eliminar' })
-    if (informes.length && informes.length > 0) {
-        for (const informe of informes) {
-            if (!informe.periodoAcademico.estado) {
-                return res.status(404).json({ message: 'Este formato no se puede eliminar' })
-            }
-        }
-    }
     await formato.delete()
     return res.status(200).json({ message: 'Formato eliminado con éxito' })
 }

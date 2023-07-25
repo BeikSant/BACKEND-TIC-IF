@@ -67,6 +67,7 @@ usuarioController.updatePassword = async (req, res) => {
 usuarioController.generarTokenRecuperacion = async (req, res) => {
     const email = req.params.email
     let enlace = req.body.enlace
+    console.log(email)
     try {
         const user = await usuarioModel.findOne({ username: email })
         if (!user) return res.status(404).json({ message: "El correo no pertence a ninguna cuenta registrada" })

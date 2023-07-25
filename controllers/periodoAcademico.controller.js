@@ -10,11 +10,13 @@ periodoAcademicoController.crear = async (req, res) => {
         fechaInicio: req.body.periodo.fechaInicio.toString(),
         fechaFin: req.body.periodo.fechaFin != '' ? new Date(req.body.periodo.fechaFin) : null
     }
+    const periodos = await periodoAcademicoModel.find({nombre: periodo.nombre})
+    if (periodos.length > 0) return res.status(404).json({ message: "Ya existe un periodo con ese nombre" })
     const cambiarEstado = await cambiarEstadoUltimoPeriodo()
-    if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el nuevo periodo académico" })
+    if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el periodo académico" })
     const periodoAcademico = await periodoAcademicoModel.create(periodo)
-    if (!periodoAcademico) return res.status(404).json({ message: "Ocurrió un error al crear el nuevo periodo académico" })
-    return res.status(200).json({ message: "Se creó con éxito un nuevo periodo académico" })
+    if (!periodoAcademico) return res.status(404).json({ message: "Ocurrió un error al crear el periodo académico" })
+    return res.status(200).json({ message: "Se creó con éxito el periodo académico" })
 }
 
 periodoAcademicoController.obtenerTodos = async (req, res) => {
@@ -47,12 +49,15 @@ periodoAcademicoController.eliminar = async (req, res) => {
 
 periodoAcademicoController.editar = async (req, res) => {
     const periodoBody = req.body
-    console.log(periodoBody)
     const idperiodo = req.params.id
-    console.log(idperiodo)
     if (!mongoose.isValidObjectId(idperiodo)) return res.status(404).json({message: "No existe el periodo académico"})
     const periodo = await periodoAcademicoModel.findById(idperiodo)
+    const periodos = await periodoAcademicoModel.find({nombre: periodoBody.nombre})
     if (!periodo) return res.status(404).json({message: "No existe el periodo académico"})
+    if (periodos.length > 0) {
+        console.log(periodos[0].id, periodo.id)
+        if (periodos[0].id != periodo.id) return res.status(404).json({ message: "Ya existe un periodo con ese nombre" })
+    }
     if (!periodo.estado)  return res.status(404).json({message: "No se puede editar el periodo académico"})
     await periodo.updateOne(periodoBody)
     return res.status(200).json({message: "Periodo académico editado con éxito"})

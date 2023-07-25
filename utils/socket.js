@@ -10,6 +10,7 @@ export default function socket(server) {
         }
     });
     io.on('connection', (socket) => {
+        console.log('connection socket')
         socket.on('disconnect', () => {
         });
     })
