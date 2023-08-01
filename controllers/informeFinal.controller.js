@@ -78,6 +78,7 @@ informeFinalController.asignarFormato = async (req, res) => {
 
 informeFinalController.guardarInformeFirmaDocente = async (req, res) => {
     if (!req.file) return res.status(404).json({ message: 'Debe proporcionar un documento' });
+    if (!req.body.firmado_por) return res.status(404).json({ message: "Proporcione si firmado_por es por 'docente' o 'director'"})
     if (req.body.firmado_por == 'docente') {
         console.log(req.periodo._id.toString())
         const informe = await informeModel.findOne({ docente: req.user.docente, periodoAcademico: req.periodo._id.toString() });

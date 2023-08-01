@@ -1,14 +1,9 @@
 import multer from "multer";
 import periodoAcademicoModel from "../models/periodoAcademico.model.js";
 import fs from 'fs'
-import docenteModel from "../models/docente.model.js";
 
 async function obtenerPeriodoActivo() {
     return await periodoAcademicoModel.findOne({ estado: true }).lean()
-}
-
-async function obtenerDocente(id) {
-    return await docenteModel.findById(id)
 }
 
 const FILEPATH = 'public/uploads/'
@@ -22,16 +17,9 @@ const storage = multer.diskStorage({
         cb(null, FILEPATH + periodo.nombre)
     },
     filename: async function (req, file, cb) {
-        let signed = ''
-        const docente = await obtenerDocente(req.user.docente)
-        if (req.body.firmado_por == 'docente') {
-            signed = 'SignedByDocente'
-        }
-        else if (req.body.firmado_por == 'director') {
-            signed = 'SignedByDocenteAndDirector'
-        } 
-        else return cb(new Error("Proporcione si firmado_por es por 'docente' o 'director' "))
-        const FILENAME = 'Informe-' + docente.primerNombre + '.' + docente.primerApellido + '-' + signed + '.pdf'
+        const timestamp = Date.now().toString(); // Convertir la marca de tiempo a una cadena
+        const randomChars = Math.random().toString(36).substring(2, 9); // Generar cadena aleatoria de 7 caracteres
+        const FILENAME = `doc_${timestamp}_${randomChars}.pdf`;
         if (fs.existsSync(FILEPATH + FILENAME)) fs.unlinkSync(FILEPATH + FILENAME)
         req.nombreDocumento = FILENAME
         cb(null, FILENAME)
