@@ -46,7 +46,7 @@ informeFinalController.obtenerTodosPorDocente = async (req, res) => {
     try {
         const docente = await docenteModel.findById(id)
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
-        const informes = await informeModel.find({ docente: docente.id, documento_firma_docente: { $ne: null } }).sort({ created_at: 'desc' })
+        const informes = await informeModel.find({ docente: docente.id}).sort({ created_at: 'desc' })
             .populate(['periodoAcademico'])
             .lean()
         if (!informes) return res.status(404).json({ message: "No se pudo obtener los informes del docente" })

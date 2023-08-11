@@ -6,8 +6,6 @@ const actividadDistributivoRoute = express.Router();
 
 actividadDistributivoRoute.get('/', requireToken, actividadDistributivoController.obtenerActivas)
 actividadDistributivoRoute.post('/', requireToken, isDirector ,actividadDistributivoController.guardarTodos)
-//actividadDistributivoRoute.post('/one', requireToken, isDirector, actividadDistributivoController.guardarUno)
-//actividadDistributivoRoute.get('/:id', requireToken, actividadDistributivoController.obtenerPorFuncion)
 
 
 export default actividadDistributivoRoute;
