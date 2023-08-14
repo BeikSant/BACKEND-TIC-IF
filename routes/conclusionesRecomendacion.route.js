@@ -1,5 +1,5 @@
 import express from 'express';
-import conclusionRecomendacionController from '../controllers/conclusionRecomendacion.controller.js';
+import conclusionRecomendacionController from '../controllers/conclusionRecomendacion.controller.js'
 import { requireToken } from '../middleware/validateSesion.js';
 
 const conclusionRouter = express.Router()
