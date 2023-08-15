@@ -7,8 +7,8 @@ export default {
             port: 465,
             secure: true,
             auth: {
-                user: process.env.USER_MAIL,
-                pass: process.env.PASS_MAIL
+                user: process.env.USER_MAIL ?? 'santorumbeiker069@gmail.com',
+                pass: process.env.PASS_MAIL ?? 'fgoaebuyxhxzqrfu'
             }
         }
         const mensaje = {
@@ -45,7 +45,6 @@ export default {
             await transport.sendMail(mensaje)
             return 'success'
         } catch (error) {
-            console.error("aqui es")
             console.log(error)
             return 'error'
         }
