@@ -45,7 +45,7 @@ export default function (req, res, next) {
         if (err) {
             if (err.code == 'LIMIT_FILE_SIZE') err.message = "El documento excede el tamaño permitido"
             if (err.code == 'LIMIT_FILE_COUNT') err.message = 'Solo se permite 1 documento'
-            console.log(err)
+            console.error(err)
             res.status(404).json({ message: err.message });
         } else {
             next();

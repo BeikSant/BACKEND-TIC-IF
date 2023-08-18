@@ -59,8 +59,7 @@ app.use(rutaPrincipal + "notificacion/", notificacionRouter);
 
 //Manejo de excepciones no controladas
 app.use((err, _req, res, _next) => {
-  console.log(err);
-  console.log(err instanceof multer.MulterError);
+  console.error(err);
   if (err instanceof multer.MulterError)
     return res
       .status(400)
@@ -71,8 +70,8 @@ app.use((err, _req, res, _next) => {
 const PORT = process.env.PORT || 8000; // Aqui se coloca el puerto de la aplicacion
 server.listen(PORT, (err, _res) => {
   //Aqui se inicia el servidor
-  if (err) return console.log(err);
-  console.log("Servidor iniciado con éxito en puerto:", PORT);
+  if (err) return console.error(err);
+  ("Servidor iniciado con éxito en puerto:", PORT);
 });
 
 export { app, server };

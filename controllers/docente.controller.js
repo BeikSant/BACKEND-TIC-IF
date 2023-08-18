@@ -45,7 +45,7 @@ docenteController.obtenerUno = async (req, res) => {
         if (!docente) return res.status(404).json({ message: "No se encontró al docente" })
         return res.status(200).json({ docente })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
@@ -61,7 +61,6 @@ docenteController.crear = async (req, res) => {
             correo: req.body.correo.toString(),
             dedicacion: req.body.dedicacion.toString(),
         }
-        console.log(docente)
         if ((await docenteModel.find({ correo: docente.correo })).length > 0) return res.status(404).json({ message: 'El correo ya pertenece a otro docente' })
         const iddirector = req.user.docente
         //Obtiendo la carrera del director
@@ -89,7 +88,7 @@ docenteController.crear = async (req, res) => {
         })
         return res.status(200).json({ message: 'Docente creado con éxito', docente: doc })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(404).json({ message: 'Ocurrió un error al crear al docente' })
     }
 }
@@ -110,10 +109,9 @@ docenteController.editar = async (req, res) => {
                     path: 'rol',
                 }
             })
-        console.log(docenteUpdt)
         return res.status(200).json({ message: 'Información del docente actualizada con éxito', docente: docenteUpdt })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 
@@ -130,7 +128,7 @@ docenteController.editarDedicacion = async (req, res) => {
         await docenteFind.updateOne({ dedicacion })
         return res.status(200).json({ message: 'Se actualizó con éxito su dedicación' })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }

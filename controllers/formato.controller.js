@@ -11,7 +11,7 @@ formatoController.obtenerPorDefecto = async (_req, res) => {
 
 formatoController.obtenerUno = async (req, res) => {
     const id = req.params.formato
-    console.log(id)
+    (id)
     const formato = await formatoModel.findById(id)
     if (!formato) res.status(404).json({ message: 'No se encontró el formato' })
     return res.status(200).json(formato)
@@ -91,7 +91,7 @@ formatoController.obtenerActivo = async (req, res) => {
         if (!formato) return res.status(404).json({ message: "No existe un formato activo o disponible" })
         return res.status(200).json(formato)
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).message({ message: "Error interno del servidor" })
     }
 }

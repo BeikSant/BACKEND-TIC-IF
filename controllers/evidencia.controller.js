@@ -35,7 +35,6 @@ evidenciaController.eliminar = async (req, res) => {
     const id = req.params.id
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No se encontró la evidencia"})
     const evidencia = await evidenciaModel.findById(id)
-    console.log(evidencia)
     if (!evidencia) return res.status(404).json({ message: "No se encontró la evidencia"})
     await ordenarEvidenciaEliminar(evidencia.orden, evidencia.actividadEspecifica)
     await evidencia.delete()
@@ -44,7 +43,6 @@ evidenciaController.eliminar = async (req, res) => {
 
 evidenciaController.editar = async (req, res) =>{
     const id = req.params.id
-    console.log(id)
     const evidenciaBody = req.body.evidencia
     if (!mongoose.isValidObjectId(id)) return res.status(404).json({ message: "No se encontró la evidencia"})
     const evidencia = await evidenciaModel.findById(id)

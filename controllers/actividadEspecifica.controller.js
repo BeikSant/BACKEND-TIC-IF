@@ -31,7 +31,7 @@ actividadEspecificaController.obtenerPorInforme = async (req, res) => {
             actividadesEspecificas: actividades
         })
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 
 }
@@ -79,7 +79,6 @@ actividadEspecificaController.eliminar = async (req, res) => {
 actividadEspecificaController.actualizar = async (req, res) => {
     const idActividad = req.params.id
     const actividad = req.body.actividad
-    console.log(actividad)
     if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     const actividadEspecifica = await actividadEspecificaModel.findById(idActividad)
     if (!actividadEspecifica) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })

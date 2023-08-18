@@ -55,7 +55,7 @@ periodoAcademicoController.editar = async (req, res) => {
     const periodos = await periodoAcademicoModel.find({nombre: periodoBody.nombre})
     if (!periodo) return res.status(404).json({message: "No existe el periodo académico"})
     if (periodos.length > 0) {
-        console.log(periodos[0].id, periodo.id)
+        (periodos[0].id, periodo.id)
         if (periodos[0].id != periodo.id) return res.status(404).json({ message: "Ya existe un periodo con ese nombre" })
     }
     if (!periodo.estado)  return res.status(404).json({message: "No se puede editar el periodo académico"})
@@ -73,7 +73,7 @@ const cambiarEstadoUltimoPeriodo = async () => {
         }
         return "success"
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return "error"
     }
 }

@@ -11,7 +11,7 @@ export const requireToken = (req, res, next) => {
         req.user = payload
         next()
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(401).json({ message: "No autorizado" })
     }
 }

@@ -37,7 +37,7 @@ usuarioController.login = async (req, res) => {
     const token = generateToken(dataUser);
     return res.status(200).json({ token });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -73,7 +73,7 @@ usuarioController.updatePassword = async (req, res) => {
       .status(200)
       .json({ message: "La contraseña se actualizó con éxito" });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -81,7 +81,7 @@ usuarioController.updatePassword = async (req, res) => {
 usuarioController.generarTokenRecuperacion = async (req, res) => {
   const email = req.params.email;
   let enlace = req.body.enlace;
-  console.log(email);
+  (email);
   try {
     const user = await usuarioModel.findOne({ username: email });
     if (!user)
@@ -103,7 +103,7 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
       user.tokenRecuperacion = null;
       user.tokenExpire = null;
     }
-    //console.log(user.tokenRecuperacion && user.tokenRecuperacion != null ? true : false)
+    //(user.tokenRecuperacion && user.tokenRecuperacion != null ? true : false)
     const token = nanoid(50);
     const fechaExpire = new Date();
     fechaExpire.setHours(fechaExpire.getHours() + 1);
@@ -119,7 +119,7 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
     await user.save();
     return res.status(201).json({ message: "Email enviado a su correo" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -143,7 +143,7 @@ usuarioController.verifyToken = async (req, res) => {
     await user.save();
     return res.status(404).json({ message: "Not Found" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -160,7 +160,7 @@ usuarioController.recuperarPassword = async (req, res) => {
     await user.save();
     res.status(200).json({ message: "Contraseña actualizada con éxito" });
   } catch (error) {
-    console.log(err);
+    console.error(err);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
@@ -190,7 +190,7 @@ usuarioController.cambiarEstado = async (req, res) => {
       .status(200)
       .json({ message: "Se ha activado la cuenta del docente con éxito" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ message: "Error interno del servidor" });
   }
 };

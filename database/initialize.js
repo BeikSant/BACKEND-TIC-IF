@@ -8,10 +8,10 @@ import formatoModel from "../models/formato.model.js";
 export default {
   async initData() {
     try {
-      console.log("Verificando si existen datos en la base de datos");
+      ("Verificando si existen datos en la base de datos");
       const usuarios = await usuarioModel.find();
       if (usuarios.length != 0)
-        return console.log("Ya existen datos registrados en la base de datos");
+        return ("Ya existen datos registrados en la base de datos");
       const dataFacultad = {
         nombre:
           "Facultad de la Energía, las Industrias y los Recursos Naturales no Renovables",
@@ -73,11 +73,11 @@ export default {
         actividadesDistributivo: "Actividades del distributivo docente",
       };
       await formatoModel.create(dataFormato);
-      return console.log(
+      return (
         "Datos predeterminados cargados a la base de datos con normalidad"
       );
     } catch (error) {
-      console.log(
+      (
         "Ocurrió un error al inicializar los datos predeterminados en MongoDB:",
         error
       );

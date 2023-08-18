@@ -1,6 +1,8 @@
+
 export default {
   testEnvironment: "node",
-  testMatch: ["**/*.test.js"],
+  setupFilesAfterEnv: ["./tests/config/config.test.js"],
+  testMatch: ["**/*.test.js"]
 };
 
 process.env = Object.assign(process.env, {

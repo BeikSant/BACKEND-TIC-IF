@@ -44,7 +44,6 @@ export default {
                 }
                 const actiDis = await actividadDistributivoModel.create(data)
                 if (!actiDis) {
-                    console.log("No se guardo una actividad del distributivo docente")
                     actividadesNoGuardadas.push(ad)
                 }
             }
@@ -59,7 +58,7 @@ export default {
 
 const cambiarEstado = async () => {
     const actividades = await actividadDistributivoModel.find({ estado: true })
-    console.log(actividades)
+    (actividades)
     if (!actividades) return "error"
     for (let actividad of actividades) {
         await actividad.update({ estado: false })

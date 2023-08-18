@@ -21,7 +21,7 @@ informeFinalController.obtenerPorPeriodo = async (req, res) => {
         if (!informe) informe = await informeModel.create({ docente: docente.id, periodoAcademico: periodoAcademico.id })
         return res.status(200).json({ message: "Se pudo obtener el informe final", informeFinal: informe })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
@@ -35,7 +35,7 @@ informeFinalController.obtenerTodosPorPeriodo = async (req, res) => {
         const informes = await informeModel.find({ periodoAcademico: idPeriodo }).populate('docente')
         return res.status(200).json({ informes })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
@@ -50,7 +50,7 @@ informeFinalController.obtenerTodosPorDocente = async (req, res) => {
             .populate(['periodoAcademico'])
             .lean()
         if (!informes) return res.status(404).json({ message: "No se pudo obtener los informes del docente" })
-        console.log(informes)
+        (informes)
         for (const informe of informes) {
             if (informe.periodoAcademico == null) {
                 await informeModel.findByIdAndDelete(informes[i]._id)
@@ -58,7 +58,7 @@ informeFinalController.obtenerTodosPorDocente = async (req, res) => {
         }
         return res.status(200).json({ informes: informes })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ message: "Error interno del servidor" })
     }
 }
@@ -80,7 +80,7 @@ informeFinalController.guardarInformeFirmaDocente = async (req, res) => {
     if (!req.file) return res.status(404).json({ message: 'Debe proporcionar un documento' });
     if (!req.body.firmado_por) return res.status(404).json({ message: "Proporcione si firmado_por es por 'docente' o 'director'"})
     if (req.body.firmado_por == 'docente') {
-        console.log(req.periodo._id.toString())
+        (req.periodo._id.toString())
         const informe = await informeModel.findOne({ docente: req.user.docente, periodoAcademico: req.periodo._id.toString() });
         await informe.updateOne({ documento_firma_docente: req.periodo.nombre + '/' + req.nombreDocumento, estado: 'enviadoFirmar'})
     } else if (req.body.firmado_por == 'director'){
