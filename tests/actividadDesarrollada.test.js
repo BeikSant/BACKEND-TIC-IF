@@ -3,6 +3,7 @@ import supertest from "supertest";
 import { app } from "../index";
 
 const api = supertest(app);
+let actDesarrolladas = [];
 
 describe("Pruebas API actividad desarrollada", () => {
   test("Agregar una actividad desarrollada", async () => {
@@ -18,8 +19,6 @@ describe("Pruebas API actividad desarrollada", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
   });
-
-  let actDesarrolladas = [];
 
   test("Obtener todas las actividades desarrolladas de una actividad especifica", async () => {
     await api
