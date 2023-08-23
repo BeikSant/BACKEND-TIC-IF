@@ -11,11 +11,11 @@ periodoAcademicoController.crear = async (req, res) => {
         fechaFin: req.body.periodo.fechaFin != '' ? new Date(req.body.periodo.fechaFin) : null
     }
     const periodos = await periodoAcademicoModel.find({nombre: periodo.nombre})
-    if (periodos.length > 0) return res.status(404).json({ message: "Ya existe un periodo con ese nombre" })
+    if (periodos.length > 0) return res.status(403).json({ message: "Ya existe un periodo con ese nombre" })
     const cambiarEstado = await cambiarEstadoUltimoPeriodo()
-    if (cambiarEstado == "error") return res.status(404).json({ message: "Ocurrió un error al crear el periodo académico" })
+    if (cambiarEstado == "error") return res.status(403).json({ message: "Ocurrió un error al crear el periodo académico" })
     const periodoAcademico = await periodoAcademicoModel.create(periodo)
-    if (!periodoAcademico) return res.status(404).json({ message: "Ocurrió un error al crear el periodo académico" })
+    if (!periodoAcademico) return res.status(505).json({ message: "Ocurrió un error al crear el periodo académico" })
     return res.status(200).json({ message: "Se creó con éxito el periodo académico" })
 }
 

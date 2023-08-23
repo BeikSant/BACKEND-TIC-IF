@@ -36,11 +36,6 @@ app.use(express.static("public")); //Sirve hacer publico el arcivos public
 app.use(express.json()); //Sirve para leer las archivos json
 app.use(morgan("tiny")); //Se inicializa morgan en el proyecto, para leer todas la peticiones al servidor
 
-// app.use((req, res, next) => {
-//     setTimeout(next, 2000);
-//     next()
-//   });
-
 const rutaPrincipal = "/api/v1/"; //Es la ruta principal para el consumo de la APIS
 //Aqui se colocan todas las rutas que tendra la API
 app.use(rutaPrincipal + "user/", usuarioRoute);
@@ -70,8 +65,8 @@ app.use((err, _req, res, _next) => {
 const PORT = process.env.PORT || 8000; // Aqui se coloca el puerto de la aplicacion
 server.listen(PORT, (err, _res) => {
   //Aqui se inicia el servidor
-  if (err) return console.error(err);
-  ("Servidor iniciado con éxito en puerto:", PORT);
+  if (err) return console.log(err);
+  console.info("Servidor iniciado con éxito en puerto:", PORT);
 });
 
 export { app, server };
