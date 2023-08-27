@@ -1,6 +1,6 @@
-import { token } from "./config/config.test";
+import { token } from "../config/config.test";
 import supertest from "supertest";
-import { app } from "../index";
+import { app } from "../../index";
 
 const api = supertest(app);
 let formatos = [];

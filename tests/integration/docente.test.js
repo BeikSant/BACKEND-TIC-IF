@@ -1,27 +1,27 @@
-import { token } from "./config/config.test";
+import { token } from "../config/config.test";
 import supertest from "supertest";
-import { app } from "../index";
+import { app } from "../../index";
 
 const api = supertest(app);
 let docentes = [];
 
 describe("Pruebas API docente", () => {
 
-//   test("Agregar un docente", async () => {
-//     await api
-//       .post("/api/v1/docente")
-//       .set("Authorization", `bearer ${token}`)
-//       .send({
-//         primerNombre: "Prueba",
-//         segundoNombre: "Prueba",
-//         primerApellido: "Prueba",
-//         segundoApellido: "Prueba",
-//         correo: "prueba.prueba@unl.edu.ec",
-//         dedicacion: "Tiempo Completo",
-//       })
-//       .expect(200)
-//       .expect("Content-Type", /application\/json/);
-//   });
+  test("Agregar un docente", async () => {
+    await api
+      .post("/api/v1/docente")
+      .set("Authorization", `bearer ${token}`)
+      .send({
+        primerNombre: "Prueba",
+        segundoNombre: "Prueba",
+        primerApellido: "Prueba",
+        segundoApellido: "Prueba",
+        correo: "prueba.prueba@unl.edu.ec",
+        dedicacion: "Tiempo Completo",
+      })
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+  });
 
   test("Obtener todos los docentes", async () => {
     await api
