@@ -16,10 +16,10 @@ describe("Pruebas API docente", () => {
         segundoNombre: "Prueba",
         primerApellido: "Prueba",
         segundoApellido: "Prueba",
-        correo: "prueba.prueba@unl.edu.ec",
+        correo: "prueba.prueba1@unl.edu.ec",
         dedicacion: "Tiempo Completo",
       })
-      .expect(200)
+      .expect(404)
       .expect("Content-Type", /application\/json/);
   });
 

@@ -50,7 +50,7 @@ evidenciaController.editar = async (req, res) =>{
     if (evidenciaBody.orden && evidencia.orden != evidenciaBody.orden ){
         await ordenarEvidencia(evidencia.orden, evidenciaBody.orden, evidencia.actividadEspecifica)
     }
-    await evidencia.update(evidenciaBody)
+    await evidencia.updateOne(evidenciaBody)
     return res.status(200).json({ message: "La evidencia se editó con éxito"})
 }
 

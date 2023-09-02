@@ -20,7 +20,7 @@ socket(server);
 app.use(cors(corsConfg));// Configuacion de cors
 app.use(express.static("public")); //Sirve hacer publico el arcivos public
 app.use(express.json()); //Sirve para leer las archivos json
-app.use(morgan("tiny")); //Se inicializa morgan en el proyecto, para leer todas la peticiones al servidor
+//app.use(morgan("tiny")); //Se inicializa morgan en el proyecto, para leer todas la peticiones al servidor
 
 app.use(router); //Manejo de las rutas
 

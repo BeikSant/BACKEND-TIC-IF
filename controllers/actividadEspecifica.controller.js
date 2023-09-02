@@ -82,7 +82,7 @@ actividadEspecificaController.actualizar = async (req, res) => {
     if (!mongoose.isValidObjectId(idActividad)) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
     const actividadEspecifica = await actividadEspecificaModel.findById(idActividad)
     if (!actividadEspecifica) return res.status(404).json({ message: "No se ha podido encontrar la actividad" })
-    await actividadEspecifica.update(actividad)
+    await actividadEspecifica.updateOne(actividad)
     return res.status(200).json({ message: "Actividad actualizada con éxito" })
 }
 

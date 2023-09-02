@@ -61,7 +61,7 @@ const cambiarEstado = async () => {
     (actividades)
     if (!actividades) return "error"
     for (let actividad of actividades) {
-        await actividad.update({ estado: false })
+        await actividad.updateOne({ estado: false })
     }
     return "success"
 }

@@ -49,7 +49,7 @@ observacionController.editar = async (req, res) => {
     if (observacionBody.orden && observacion.orden != observacionBody.orden ){
         await ordenarObservacion(observacion.orden, observacionBody.orden, observacion.actividadEspecifica)
     }
-    await observacion.update(observacionBody)
+    await observacion.updateOne(observacionBody)
     return res.status(200).json({ message: "La observación se editó con éxito"})
 }
 

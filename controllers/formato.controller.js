@@ -73,7 +73,7 @@ formatoController.cambiarEstado = async (req, res) => {
     if (formatoActual != null) await formatoActual.updateOne({ estado: false })
     const formatoNuevo = await formatoModel.findById(req.params.id)
     if (!formatoNuevo) return res.status(404).json({ message: 'No se pudo encontrar el formato' })
-    await formatoNuevo.update({ estado: true })
+    await formatoNuevo.updateOne({ estado: true })
     return res.status(200).json({ message: 'Se ha actualizado con éxito el formato del informe final' })
 }
 
