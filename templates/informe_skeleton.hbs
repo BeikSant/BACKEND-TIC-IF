@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url(data:font/truetype;charset=utf-8;base64,{{fonts.bold}})format('truetype');
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url(data:font/truetype;charset=utf-8;base64,{{fonts.normal}})format('truetype');
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url(data:font/truetype;charset=utf-8;base64,{{fonts.italic}})format('truetype');
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url(data:font/truetype;charset=utf-8;base64,{{fonts.boldItalic}})format('truetype');
+            font-style: normal;
+            font-display: swap;
+        }
+
+        html {
+            font-family: 'Century Gothic';
+        }
+    </style>
+
+    <header class="flex items-center justify-center">
+        <div class="w-1/3">
+            <img src="data:image/png;base64,{{imgBase64}}" alt="" class="w-52">
+        </div>
+        <div class="text-center font-bold flex flex-col gap-3">
+            <h4>UNIVERISIDAD NACIONAL DE LOJA</h4>
+            <h4>COMISIÓN DE ARTICULACIÓN DE LAS FUNCIONES SUSTANTIVAS</h4>
+            <h4>{{formato.nombreFormato}}</h4>
+        </div>
+    </header>
+
+    <section class="grid grid-cols-[0.5fr,1.5fr] mt-12 gap-2 gap-x-12 text-sm items-center">
+
+        <span class="font-bold">{{formato.facultad}}:</span>
+        <span></span>
+        <span class="font-bold">{{formato.carrera}}: </span>
+        <span></span>
+        <span class="font-bold">{{formato.docente}}:</span>
+        <span></span>
+        <span class="font-bold">{{formato.dedicacion}}:</span>
+        <span></span>
+        <span class="font-semibold">{{formato.periodoAcademico}}:</span>
+        <span></span>
+        <span class="font-semibold">{{formato.totalHoras}}: </span>
+        <span></span>
+
+    </section>
+    <section>
+        <table class="mt-10 w-full border-collapse table-fixed border border-black text-sm">
+            <thead class="bg-sky-800 text-white">
+                <tr>
+                    <th class="border border-black text-sm px-1 py-0.5 w-32">{{formato.funcionesSustantivas}}</th>
+                    <th class="border border-black text-sm px-1 py-0.5">{{formato.actividadesDistributivo}}</th>
+                    <th class="border border-black text-sm px-1 py-0.5 w-16">{{formato.horasPAO}}</th>
+                    <th class="border border-black text-sm px-1 py-0.5">{{formato.actividadesDesarrolladas}}</th>
+                    <th class="border border-black text-sm px-1 py-0.5">{{formato.evidencias}}</th>
+                    <th class="border border-black text-sm px-1 py-0.5">{{formato.observaciones}}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td class="border border-black px-1 py-0.5 text-center">DOCENCIA</td>
+                    <td class="border border-black px-1 py-0.5 text-center">AD1 - DOCENCIA</td>
+                    <td class="border border-black px-1 py-0.5 text-center">0</td>
+                    <td class="border border-black px-1 py-0.5">ACTIVIDADES DESARROLLADAS</td>
+                    <td class="border border-black px-1 py-0.5">EVIDENCIAS</td>
+                    <td class="border border-black px-1 py-0.5">OBSERVACIONES</td>
+
+                </tr>
+                <tr>
+                    <td colspan="3" class="font-semibold text-center border text-sm px-1 py-0.5 border-black"
+                      valign="center">
+                        {{formato.conclusiones}}</td>
+                    <td class="border border-black text-sm px-1 py-0.5" colspan="3">
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <footer class="mt-4">
+        <div class="w-full">
+            Fecha de presentación: 03/09/2023
+        </div>
+        <div class="flex justify-between text-center mt-24">
+            <div class="w-1/3">
+                <hr class="bg-black h-0.5 w-auto">
+                Firma del docente
+            </div>
+            <div class="w-1/3">
+                <hr class="bg-black h-0.5">
+                Firma del Director/a y/o Encargado de la Gestión Académica de la Carrera
+            </div>
+        </div>
+
+    </footer>
+
+</body>
+
+
+
+</html>

@@ -8,6 +8,7 @@ const informeFinalRouter = express.Router()
 informeFinalRouter.get('/', requireToken, informeFinalController.obtenerTodosPorDocente)
 informeFinalRouter.get('/all/:periodo', requireToken, isDirector, informeFinalController.obtenerTodosPorPeriodo)
 informeFinalRouter.get('/:periodo', requireToken, informeFinalController.obtenerPorPeriodo)
+informeFinalRouter.get('/generate/:informe', requireToken, informeFinalController.generarInforme)
 informeFinalRouter.post('/upload', requireToken, upload, informeFinalController.guardarInformeFirmaDocente)
 informeFinalRouter.post('/estado/:informe', requireToken, informeFinalController.cambiarEstado)
 

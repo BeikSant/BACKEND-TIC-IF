@@ -8,8 +8,8 @@ mongoose
   .then(async () => {
     console.info("Se ha establecido la conexión con la base de datos");
     //inicializa algunos datos, cuando no hayan nada en la base de datosD
-    if (process.env.MODO != "test") await initialize.initData(); 
+    if (process.env.MODO != "test") await initialize.initData();
   })
-  .catch(() => {
+  .catch((error) => {
     console.error("Error en la conexión a la base de datos: " + error);
   });

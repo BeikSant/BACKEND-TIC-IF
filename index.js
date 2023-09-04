@@ -9,6 +9,7 @@ import socket from "./utils/socket.js";
 import multer from "multer";
 import corsConfg from "./utils/cors.js";
 import router from "./routes/index.js";
+import { engine } from "express-handlebars";
 
 const app = express(); //inicializa el proyecto con express.js
 app.disable("x-powered-by"); // Desactiva la informacion de las herramientas que se usaron en el servidor
@@ -33,6 +34,15 @@ app.use((err, _req, res, _next) => {
       .send({ error: "Error al cargar el archivo: " + err.message });
   return res.status(500).json({ message: "Error interno del servidor" });
 });
+
+app.engine(
+  "hbs",
+  engine({
+    extname: "hbs",
+    defaultLayout: false,
+    layoutsDir: "templates/"
+  })
+);
 
 const PORT = process.env.PORT || 8000;
 //AQUI SI INICIA EL SERVIDOR
