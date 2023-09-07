@@ -9,6 +9,7 @@ import periodoAcademicoModel from "../models/periodoAcademico.model.js";
 import actividadEspecificaModel from "../models/actividadEspecifica.model.js";
 import conclusionModel from "../models/conclusion_recomendacion.model.js";
 import { generarInformePDF } from "../utils/generatePDF.js";
+import mail from "../utils/mail.js";
 
 const informeFinalController = {
   obtenerTodosPorPeriodo: async (req, res) => {
@@ -141,6 +142,30 @@ const informeFinalController = {
         documento_firma_docente: req.periodo.nombre + "/" + req.nombreDocumento,
         estado: "enviadoFirmar",
       });
+      const docentes = await docenteModel
+        .find()
+        .populate({
+          path: "usuario",
+          populate: "rol",
+        })
+        .lean();
+      const directorFind = docentes.find(
+        (d) => d.usuario.rol.nombre == "director"
+      );
+      const docente = await docenteModel.findById(req.user.docente).lean();
+      const data = {
+        director: {
+          primerNombre: directorFind.primerNombre,
+          primerApellido: directorFind.primerApellido,
+          email: directorFind.correo,
+        },
+        docente: {
+          primerNombre: docente.primerNombre,
+          primerApellido: docente.primerApellido,
+        },
+        enlace: process.env.ORIGIN_1 + "/informe/revision",
+      };
+      await mail.enviarInformeDirector(data);
     } else if (req.body.firmado_por == "director") {
       const informe = await informeModel.findOne({
         docente: req.body.docente,
@@ -151,6 +176,16 @@ const informeFinalController = {
           req.periodo.nombre + "/" + req.nombreDocumento,
         estado: "completado",
       });
+      const docente = await docenteModel.findById(req.body.docente).lean();
+      const data = {
+        docente: {
+          primerNombre: docente.primerNombre,
+          primerApellido: docente.primerApellido,
+          email: docente.correo,
+        },
+        enlace: process.env.ORIGIN_1 + "/informe/registro",
+      };
+      await mail.enviarInformeDocente(data);
     }
     return res
       .status(200)
@@ -243,7 +278,7 @@ const informeFinalController = {
       funcionesSustantivas,
       conclusiones,
     });
-    return res.status(200).json({pdf});
+    return res.status(200).json({ pdf });
   },
 
   cambiarEstado: async (req, res) => {
