@@ -6,7 +6,7 @@ export default {
     //obtiene todas las actividades del distributivo activas con su respectiva funcion sustantiva
     obtenerActivas: async (_, res) => {
         const funcionesSustantivas = await funcionSustantivaModel.find()
-        if (funcionesSustantivas == []) return res.status(404).json({ message: "No existen actividades del distributivo registradas" })
+        if (funcionesSustantivas.length == 0) return res.status(404).json({ message: "No existen actividades del distributivo registradas" })
         let result = { funcionesSustantivas: [] }
         for (let fs of funcionesSustantivas) {
             const actividades = await actividadDistributivoModel.find({ estado: true, funcionSustantiva: fs.id })
