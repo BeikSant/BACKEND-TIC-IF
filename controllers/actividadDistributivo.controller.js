@@ -39,7 +39,6 @@ export default {
                 const data = {
                     sigla: ad.sigla.toString(),
                     descripcion: ad.descripcion.toString(),
-
                     funcionSustantiva: funcionSustantiva.id
                 }
                 const actiDis = await actividadDistributivoModel.create(data)
@@ -58,7 +57,6 @@ export default {
 
 const cambiarEstado = async () => {
     const actividades = await actividadDistributivoModel.find({ estado: true })
-    (actividades)
     if (!actividades) return "error"
     for (let actividad of actividades) {
         await actividad.updateOne({ estado: false })

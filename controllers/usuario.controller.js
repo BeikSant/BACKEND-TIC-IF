@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import docenteModel from "../models/docente.model.js";
 import rolModel from "../models/rol.model.js";
-//import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid'
 import usuarioModel from "../models/usuario.model.js";
 import { generateToken } from "../utils/tokens.js";
 import mail from "../utils/mail.js";
@@ -103,6 +103,7 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
       user.tokenRecuperacion = null;
       user.tokenExpire = null;
     }
+    const docente = await docenteModel.findOne({correo:email}).lean()
     //(user.tokenRecuperacion && user.tokenRecuperacion != null ? true : false)
     const token = nanoid(50);
     const fechaExpire = new Date();
@@ -110,10 +111,15 @@ usuarioController.generarTokenRecuperacion = async (req, res) => {
     //enviar email
     user.tokenRecuperacion = token;
     user.tokenExpire = fechaExpire;
-    const enviarEmail = await mail.enviarMail(
-      user.username,
-      enlace + "/" + user.tokenRecuperacion
-    );
+    const data = {
+      docente: {
+        primerNombre: docente.primerNombre,
+        primerApellido: docente.primerApellido,
+        email: email
+      },
+      enlace: process.env.ORIGIN_1 + '/recuperar/cuenta/' + user.tokenRecuperacion
+    }
+    const enviarEmail = await mail.recuperarCuenta(data)
     if (enviarEmail == "error")
       return res.status(404).json({ message: "Error al enviar el correo" });
     await user.save();

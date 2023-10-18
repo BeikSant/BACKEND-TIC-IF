@@ -8,6 +8,7 @@ formatoRouter.get('/', requireToken,isDirector, formatoController.obtenerTodos);
 formatoRouter.post('/', requireToken, isDirector, formatoController.crear);
 formatoRouter.patch('/:id', requireToken, isDirector, formatoController.actualizar)
 formatoRouter.get('/defecto', requireToken, isDirector, formatoController.obtenerPorDefecto)
+formatoRouter.get('/download/:id', requireToken, isDirector, formatoController.descargar)
 formatoRouter.patch('/estado/:id', requireToken, isDirector, formatoController.cambiarEstado);
 formatoRouter.get('/active', requireToken, formatoController.obtenerActivo)
 formatoRouter.get('/:formato', requireToken, formatoController.obtenerUno)
