@@ -61,21 +61,21 @@ export default {
         await conclusionRecomendacionModel.updateMany(
           {
             informe: conclusion.informe,
-            $and: {
-              orden: { $gte: bodyConclusion.orden },
-              orden: { $lt: conclusion.orden },
-            },
+            $and: [
+              { orden: { $gte: bodyConclusion.orden } },
+              { orden: { $lt: conclusion.orden } },
+            ],
           },
-          { $inc: { orden: +1 } }
+          { $inc: { orden: 1 } }
         );
       } else {
         await conclusionRecomendacionModel.updateMany(
           {
             informe: conclusion.informe,
-            $and: {
-              orden: { $gt: conclusion.orden },
-              orden: { $lte: bodyConclusion.orden },
-            },
+            $and: [
+              { orden: { $gt: conclusion.orden } },
+              { orden: { $lte: bodyConclusion.orden } },
+            ],
           },
           { $inc: { orden: -1 } }
         );
